@@ -1,0 +1,2164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBTI 人格测试 - HR咨询顾问版 | 职场人格与工作风格评估</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+            --radius: 12px;
+            --radius-lg: 20px;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* ====== Header ====== */
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+            padding: 48px 24px 56px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 70%, rgba(255,255,255,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 30%, rgba(255,255,255,0.06) 0%, transparent 50%);
+            animation: headerFloat 20s ease-in-out infinite alternate;
+        }
+        
+        @keyframes headerFloat {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-5%, -5%); }
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        h1 {
+            font-size: clamp(28px, 5vw, 42px);
+            color: #fff;
+            font-weight: 800;
+            line-height: 1.25;
+            margin-bottom: 14px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+        
+        .subtitle {
+            color: rgba(255,255,255,0.88);
+            font-size: clamp(15px, 2.5vw, 17px);
+            max-width: 550px;
+            margin: 0 auto 12px;
+        }
+        
+        .sub-info {
+            color: rgba(255,255,255,0.65);
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        /* ====== Container ====== */
+        .container {
+            max-width: 720px;
+            margin: -32px auto 60px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ====== Cards ====== */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        /* ====== Start Screen ====== */
+        #startScreen { display: block; }
+        #testScreen, #resultScreen { display: none; }
+        
+        .start-content {
+            padding: 44px 36px 40px;
+            text-align: center;
+        }
+        
+        .start-icon-wrap {
+            width: 84px;
+            height: 84px;
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 26px;
+            font-size: 38px;
+        }
+        
+        .start-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: var(--text-primary);
+        }
+        
+        .start-desc {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 32px;
+            line-height: 1.75;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-bottom: 34px;
+            text-align: left;
+        }
+        
+        .feature-item {
+            background: var(--bg);
+            padding: 16px 18px;
+            border-radius: var(--radius);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .feature-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .feature-item h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .feature-item p {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            line-height: 1.55;
+        }
+        
+        .btn-start {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            padding: 16px 48px;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(37,99,235,0.45);
+        }
+        
+        .disclaimer {
+            margin-top: 22px;
+            padding: 16px;
+            background: #fefce8;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--accent);
+            text-align: left;
+        }
+        
+        .disclaimer p {
+            font-size: 12.5px;
+            color: #92400e;
+            line-height: 1.7;
+        }
+
+        /* ====== Test Screen ====== */
+        .test-header {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            padding: 20px 28px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .progress-section { flex: 1; min-width: 180px; }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+        
+        .progress-label span:first-child {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .progress-label span:last-child {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .progress-bar-wrap {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            border-radius: 4px;
+            transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0%;
+        }
+        
+        .dimension-tag {
+            display: inline-block;
+            background: #ede9fe;
+            color: #6d28d9;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 14px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+        
+        .test-body { padding: 36px 28px 40px; }
+        
+        .question-number {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+        
+        .question-text {
+            font-size: clamp(17px, 3vw, 19px);
+            font-weight: 700;
+            line-height: 1.6;
+            margin-bottom: 28px;
+            color: var(--text-primary);
+            word-break: break-word;
+        }
+        
+        .options-list { display: flex; flex-direction: column; gap: 12px; }
+        
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 18px 22px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.22s ease;
+            font-size: 15px;
+            font-family: inherit;
+            line-height: 1.55;
+            color: var(--text-primary);
+            position: relative;
+        }
+        
+        .option-btn:hover {
+            border-color: var(--primary);
+            background: #f0f7ff;
+            transform: translateX(4px);
+        }
+        
+        .option-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .option-btn.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
+        }
+        
+        .option-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            color: var(--text-secondary);
+            font-weight: 700;
+            font-size: 13px;
+            margin-right: 14px;
+            flex-shrink: 0;
+            transition: all 0.22s ease;
+        }
+        
+        .option-btn.selected .option-letter {
+            background: var(--primary);
+            color: #fff;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+            justify-content: space-between;
+        }
+        
+        .btn-nav {
+            padding: 13px 28px;
+            border: none;
+            border-radius: 11px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.22s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-prev {
+            background: #f1f5f9;
+            color: var(--text-secondary);
+        }
+        
+        .btn-prev:hover { background: #e2e8f0; }
+        
+        .btn-next {
+            background: var(--primary);
+            color: #fff;
+        }
+        
+        .btn-next:hover { background: var(--primary-dark); }
+        
+        .btn-next:disabled, .btn-prev:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #059669, #047857);
+            color: #fff;
+            padding: 16px 44px;
+        }
+        
+        .btn-submit:hover { 
+            background: linear-gradient(135deg, #047857, #065f46);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(5,150,105,0.35);
+        }
+
+        /* ====== Result Screen ====== */
+        .result-body { padding: 0; }
+        
+        /* Result Hero */
+        .result-hero {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%);
+            padding: 44px 28px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result-hero::before {
+            content: '';
+            position: absolute;
+            top: -40%; right: -30%;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .result-type-code {
+            display: inline-block;
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            padding: 8px 24px;
+            border-radius: 30px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+        
+        .result-type-name {
+            font-size: clamp(30px, 6vw, 40px);
+            color: #fff;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+        }
+        
+        .result-slogan {
+            color: rgba(255,255,255,0.85);
+            font-size: 16px;
+            font-style: italic;
+        }
+        
+        .match-rate {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 5px 16px;
+            border-radius: 20px;
+            margin-top: 14px;
+        }
+        
+        /* Radar Section */
+        .radar-section { padding: 36px 28px; border-bottom: 1px solid var(--border); }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-icon { font-size: 22px; }
+        
+        .radar-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        canvas#radarCanvas {
+            max-width: 100%;
+        }
+        
+        /* Dimensions Table */
+        .dims-section { padding: 36px 28px; border-bottom: 1px solid var(--border); }
+        
+        .dim-model-group { margin-bottom: 24px; }
+        
+        .model-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eff6ff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .dim-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            gap: 12px;
+        }
+        
+        .dim-info { flex: 1; min-width: 0; }
+        
+        .dim-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+        
+        .dim-bar-wrap {
+            flex: 1;
+            height: 8px;
+            background: #f1f5f9;
+            border-radius: 4px;
+            overflow: hidden;
+            min-width: 80px;
+        }
+        
+        .dim-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+        }
+        
+        .bar-L { background: linear-gradient(90deg, #93c5fd, #60a5fa); }
+        .bar-M { background: linear-gradient(90deg, #fcd34d, #f59e0b); }
+        .bar-H { background: linear-gradient(90deg, #34d399, #10b981); }
+        
+        .dim-level {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 6px;
+            min-width: 32px;
+            text-align: center;
+        }
+        
+        .level-L { background: #dbeafe; color: #1d4ed8; }
+        .level-M { background: #fef3c7; color: #b45309; }
+        .level-H { background: #d1fae5; color: #047857; }
+        
+        /* Advice Sections */
+        .advice-section { padding: 36px 28px; border-bottom: 1px solid var(--border); }
+        
+        .advice-card {
+            background: #f8fafc;
+            border-radius: var(--radius);
+            padding: 22px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--primary);
+            transition: transform 0.2s ease;
+        }
+        
+        .advice-card:hover { transform: translateX(4px); }
+        
+        .advice-card h4 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .advice-card ul, .advice-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            padding-left: 18px;
+        }
+        
+        .advice-card li { margin-bottom: 5px; }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #fefce8, #fef9c3);
+            border-radius: var(--radius);
+            padding: 22px;
+            border-left: 4px solid var(--accent);
+            margin-top: 16px;
+        }
+        
+        .highlight-box h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 10px;
+        }
+        
+        .highlight-box p, .highlight-box li {
+            font-size: 14px;
+            color: #a16207;
+            line-height: 1.75;
+        }
+        
+        .highlight-box ul { padding-left: 18px; }
+        .highlight-box li { margin-bottom: 5px; }
+        
+        /* Action Buttons */
+        .action-section { padding: 28px 28px 36px; text-align: center; }
+        
+        .action-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        
+        .btn-action {
+            padding: 13px 26px;
+            border: none;
+            border-radius: 11px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.22s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+        
+        .btn-retry {
+            background: var(--primary);
+            color: #fff;
+        }
+        
+        .btn-retry:hover { background: var(--primary-dark); }
+        
+        .btn-share {
+            background: #f1f5f9;
+            color: var(--text-secondary);
+        }
+        
+        .btn-share:hover { background: #e2e8f0; }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 28px 20px;
+            color: var(--text-muted);
+            font-size: 12.5px;
+            border-top: 1px solid var(--border);
+            background: var(--card-bg);
+        }
+        
+        .footer a { color: var(--primary); text-decoration: none; }
+
+        /* Responsive */
+        @media (max-width: 520px) {
+            .container { padding: 0 14px; margin-top: -24px; }
+            .start-content { padding: 32px 22px 28px; }
+            .test-body { padding: 28px 20px 32px; }
+            .test-header { padding: 16px 20px; }
+            .feature-grid { grid-template-columns: 1fr; gap: 10px; }
+            .radar-section, .dims-section, .advice-section { padding: 28px 20px; }
+            .result-hero { padding: 36px 20px; }
+            .nav-buttons { flex-direction: column-reverse; }
+            .btn-nav { justify-content: center; }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.2); }
+            50% { box-shadow: 0 0 0 8px rgba(37,99,235,0); }
+        }
+        
+        .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+
+        /* Loading spinner */
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.92);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+        
+        .spinner {
+            width: 48px; height: 48px;
+            border: 4px solid #e2e8f0;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .loading-text { margin-top: 18px; font-weight: 600; color: var(--text-secondary); font-size: 15px; }
+    </style>
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text">正在分析您的人格特质...</div>
+</div>
+
+<!-- Header -->
+<header class="header">
+    <div class="header-content">
+        <span class="badge">HR 咨询顾问版</span>
+        <h1>🧠 SBTI 人格测试</h1>
+        <p class="subtitle">基于15维心理模型的职场人格与工作风格评估工具<br>专为HR咨询顾问设计，提供个性化职业发展建议</p>
+        <p class="sub-info">⏱ 约 5 分钟 · 📊 15 维度 · 💼 27 种职场人格</p>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- ========== START SCREEN ========== -->
+    <div id="startScreen" class="card">
+        <div class="start-content">
+            <div class="start-icon-wrap">🎯</div>
+            <h2 class="start-title">探索你的职场人格密码</h2>
+            <p class="start-desc">本测试基于 SBTI（Sit-Back-And-Take-It）人格模型，从<strong>自我、情感、态度、行动、社交</strong>五大维度深度解析你的工作风格与职业倾向。完成测试后，你将获得专属的<strong>职场角色定位 + 团队适配建议 + 发展路径规划</strong>。</p>
+            
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon" style="background:#eff6ff;color:#3b82f6;">📐</div>
+                    <h4>15 维精准测评</h4>
+                    <p>覆盖自我认知、情绪管理、决策模式等核心维度</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon" style="background:#ecfdf5;color:#10b981;">💼</div>
+                    <h4>27 类职场人格</h4>
+                    <p>匹配专属人格类型，洞察工作风格与团队角色</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon" style="background:#fefce8;color:#f59e0b;">📋</div>
+                    <h4>定制化发展建议</h4>
+                    <p>针对每种人格提供职业路径与管理者适配方案</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon" style="background:#fdf2f8;color:#ec4899;">🔄</div>
+                    <h4>可视化雷达分析</h4>
+                    <p>直观呈现15维度能力分布与发展潜力图谱</p>
+                </div>
+            </div>
+            
+            <button class="btn-start pulse-glow" onclick="startTest()">
+                ▶ 开始测试
+            </button>
+            
+            <div class="disclaimer">
+                <p><strong>⚠️ 免责声明：</strong>本测试仅供娱乐和自我参考，不具备心理学诊断效力。所有结果和建议仅供参考，不作为招聘、晋升或人事决策的唯一依据。实际人事决策请结合专业心理测评、面试表现及工作履历综合判断。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== TEST SCREEN ========== -->
+    <div id="testScreen" class="card">
+        <div class="test-header">
+            <div class="progress-section">
+                <div class="progress-label">
+                    <span>答题进度</span>
+                    <span id="progressText">1 / 30</span>
+                </div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar-fill" id="progressBar"></div>
+                </div>
+            </div>
+            <span class="dimension-tag" id="dimensionTag">自我模型</span>
+        </div>
+        <div class="test-body">
+            <div class="question-number" id="qNumber">Q01</div>
+            <div class="question-text" id="qText">加载中...</div>
+            <div class="options-list" id="optionsList"></div>
+            <div class="nav-buttons">
+                <button class="btn-nav btn-prev" id="btnPrev" disabled onclick="prevQuestion()">← 上一题</button>
+                <button class="btn-nav btn-next" id="btnNext" disabled onclick="nextQuestion()">下一题 →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== RESULT SCREEN ========== -->
+    <div id="resultScreen" class="card">
+        <div class="result-body">
+            <!-- Result Hero -->
+            <div class="result-hero fade-in-up">
+                <div class="result-type-code" id="resultCode">CTRL</div>
+                <div class="result-type-name" id="resultName">拿捏者</div>
+                <div class="result-slogan" id="resultSlogan">怎么样，被我拿捏了吧？</div>
+                <div class="match-rate" id="matchRate">匹配度：92%</div>
+            </div>
+            
+            <!-- Radar Chart -->
+            <div class="radar-section fade-in-up" style="animation-delay:0.15s;">
+                <h3 class="section-title"><span class="section-icon">📊</span> 十五维度雷达图</h3>
+                <div class="radar-container">
+                    <canvas id="radarCanvas" width="400" height="400"></canvas>
+                </div>
+            </div>
+            
+            <!-- Dimensions Detail -->
+            <div class="dims-section fade-in-up" style="animation-delay:0.3s;">
+                <h3 class="section-title"><span class="section-icon">📏</span> 维度详情评分</h3>
+                <div id="dimensionsDetail"></div>
+            </div>
+            
+            <!-- Work Style Analysis -->
+            <div class="advice-section fade-in-up" style="animation-delay:0.45s;">
+                <h3 class="section-title"><span class="section-icon">💼</span> 工作风格分析</h3>
+                <div id="workStyleAnalysis"></div>
+            </div>
+            
+            <!-- Career Development -->
+            <div class="advice-section fade-in-up" style="animation-delay:0.6s;">
+                <h3 class="section-title"><span class="section-icon">🚀</span> 职业发展建议</h3>
+                <div id="careerAdvice"></div>
+                
+                <div class="highlight-box">
+                    <h4>💡 给管理者的适配建议</h4>
+                    <ul id="managerAdvice"></ul>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="action-section fade-in-up" style="animation-delay:0.75s;">
+                <div class="action-row">
+                    <button class="btn-action btn-retry" onclick="location.reload()">🔄 重新测试</button>
+                    <button class="btn-action btn-share" onclick="shareResult()">🔗 分享结果</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer class="footer">
+    <p>SBTI HR咨询顾问版 · 基于 SBTI（Sit-Back-And-Take-It）模型改编 · 仅供娱乐参考</p>
+    <p style="margin-top:6px;">原版由 B站 UP主「蛆肉儿串儿」创作 · 本版本为 HR 专业适配版</p>
+</footer>
+
+
+<script>
+// ============================================================
+// COMPLETE DATA SET
+// ============================================================
+
+const QUESTIONS = [
+    // ====== 原版SBTI题目（蛆肉儿串儿原创） ======
+    // Q01
+    {
+        code:'S3-1', model:'自我·进取', dim:'核心价值取向',
+        text:'我一定要不断往上爬、变得更厉害',
+        options:[
+            {label:'A · 不认同', score:1},
+            {label:'B · 中立', score:2},
+            {label:'C · 认同', score:3}
+        ]
+    },
+    // Q02
+    {
+        code:'E1-1', model:'情感·依恋', dim:'依恋安全感',
+        text:'我在感情里经常担心被对方抛弃',
+        options:[
+            {label:'A · 是的', score:1},
+            {label:'B · 偶尔', score:2},
+            {label:'C · 不是', score:3}
+        ]
+    },
+    // Q03
+    {
+        code:'Ac3-1', model:'行动·执行', dim:'执行模式',
+        text:'别人说你"执行力强"，你内心更接近哪句？',
+        options:[
+            {label:'A · 我被逼到最后确实执行力超强。。。', score:1},
+            {label:'B · 啊，有时候吧。', score:2},
+            {label:'C · 是的，事情本来就该被推进', score:3}
+        ]
+    },
+    // Q04
+    {
+        code:'S3-2', model:'自我·进取', dim:'核心价值取向',
+        text:'外人的评价对我来说无所吊谓。',
+        options:[
+            {label:'A · 不认同', score:1},
+            {label:'B · 中立', score:2},
+            {label:'C · 认同', score:3}
+        ]
+    },
+    // Q05 【补充题 / DRUNK触发题】
+    {
+        code:'DRUNK-GATE', model:'🍺 彩蛋', dim:'隐藏触发',
+        text:'您平时有什么爱好？',
+        options:[
+            {label:'A · 吃喝拉撒', score:1},
+            {label:'B · 艺术爱好', score:2},
+            {label:'C · 饮酒', score:99},  // 饮酒 = DRUNK触发！
+            {label:'D · 健身', score:3}
+        ]
+    },
+    // Q06
+    {
+        code:'Ac2-1', model:'行动·决策', dim:'决策风格',
+        text:'我做决定比较果断，不喜欢犹豫',
+        options:[
+            {label:'A · 不认同', score:1},
+            {label:'B · 中立', score:2},
+            {label:'C · 认同', score:3}
+        ]
+    },
+    // Q07
+    {
+        code:'E1-2', model:'情感·依恋', dim:'依恋安全感',
+        text:'对象超过5小时没回消息，说自己窜稀了，你会怎么想？',
+        options:[
+            {label:'A · 拉稀不可能5小时，也许ta隐瞒了我。', score:1},
+            {label:'B · 在信任和怀疑之间摇摆。', score:2},
+            {label:'C · 也许今天ta真的不太舒服。', score:3}
+        ]
+    },
+    // Q08
+    {
+        code:'So3-1', model:'社交·表达', dim:'表达真实度',
+        text:'有时候你明明对一件事有不同的、负面的看法，但最后没说出来。多数情况下原因是：',
+        options:[
+            {label:'A · 这种情况较少。', score:1},
+            {label:'B · 可能碍于情面或者关系。', score:2},
+            {label:'C · 不想让别人知道自己是个阴暗的人。', score:3}
+        ]
+    },
+    // Q09
+    {
+        code:'S1-1', model:'自我·认知', dim:'自尊自信',
+        text:'我不够好，周围的人都比我优秀',
+        options:[
+            {label:'A · 确实', score:1},
+            {label:'B · 有时', score:2},
+            {label:'C · 不是', score:3}
+        ]
+    },
+    // Q10
+    {
+        code:'So1-2', model:'社交·互动', dim:'社交主动性',
+        text:'朋友带了ta的朋友一起来玩，你最可能的状态是',
+        options:[
+            {label:'A · 对"朋友的朋友"天然有点距离感，怕影响二人关系', score:1},
+            {label:'B · 看对方，能玩就玩。', score:2},
+            {label:'C · 朋友的朋友应该也算我的朋友！要热情聊天', score:3}
+        ]
+    },
+    // Q11
+    {
+        code:'So1-1', model:'社交·互动', dim:'社交主动性',
+        text:'你因玩《第五人格》（一款刺激的游戏）而结识许多网友，并被邀请线下见面，你的想法是？',
+        options:[
+            {label:'A · 网上口嗨下就算了，真见面还是有点忐忑。', score:1},
+            {label:'B · 见网友也挺好，反正谁来聊我就聊两句。', score:2},
+            {label:'C · 我会打扮一番并热情聊天，万一呢，我是说万一呢？', score:3}
+        ]
+    },
+    // Q12
+    {
+        code:'A1-2', model:'态度·世界观', dim:'世界观倾向',
+        text:'你走在街上，一位萌萌的小女孩蹦蹦跳跳地朝你走来（正脸、侧脸看都萌，用vivo、苹果、华为、OPPO手机看都萌，实在是非常萌的那种），她递给你一根棒棒糖，此时你作何感想？',
+        options:[
+            {label:'A · 呜呜她真好真可爱！居然给我棒棒糖！', score:1},
+            {label:'B · 一脸懵逼，作挠头状', score:2},
+            {label:'C · 这也许是一种新型诈骗？还是走开为好。', score:3}
+        ]
+    },
+    // Q13
+    {
+        code:'A1-1', model:'态度·世界观', dim:'世界观倾向',
+        text:'大多数人是善良的',
+        options:[
+            {label:'A · 其实邪恶的人心比世界上的痔疮更多。', score:1},
+            {label:'B · 也许吧。', score:2},
+            {label:'C · 是的，我愿相信好人更多。', score:3}
+        ]
+    },
+    // Q14
+    {
+        code:'A3-2', model:'态度·意义', dim:'人生意义感',
+        text:'突然某一天，我意识到人生哪有什么他妈的狗屁意义，人不过是和动物一样被各种欲望支配着，纯纯是被激素控制的东西，饿了就吃，困了就睡，一发情就想交配，我们简直和猪狗一样没什么区别。',
+        options:[
+            {label:'A · 是这样的。', score:1},
+            {label:'B · 也许是，也许不是。', score:2},
+            {label:'C · 这简直是胡扯', score:3}
+        ]
+    },
+    // Q15
+    {
+        code:'S2-2', model:'自我·认知', dim:'自我清晰度',
+        text:'我内心有真正追求的东西',
+        options:[
+            {label:'A · 不认同', score:1},
+            {label:'B · 中立', score:2},
+            {label:'C · 认同', score:3}
+        ]
+    },
+    // Q16
+    {
+        code:'A2-2', model:'态度·规则', dim:'规则灵活度',
+        text:'我喜欢打破常规，不喜欢被束缚',
+        options:[
+            {label:'A · 认同', score:1},
+            {label:'B · 保持中立', score:2},
+            {label:'C · 不认同', score:3}
+        ]
+    },
+    // Q17
+    {
+        code:'A2-1', model:'态度·规则', dim:'规则灵活度',
+        text:'快考试了，学校规定必须上晚自习，请假会扣分，但今晚你约了女/男神一起玩《绝地求生：刺激战场》（一款刺激的游戏），你怎么办？',
+        options:[
+            {label:'A · 翘了！反正就一次！', score:1},
+            {label:'B · 干脆请个假吧。', score:2},
+            {label:'C · 都快考试了还去啥。', score:3}
+        ]
+    },
+    // Q18
+    {
+        code:'Ac1-1', model:'行动·动机', dim:'动机导向',
+        text:'我做事主要为了取得成果和进步，而不是避免麻烦和风险。',
+        options:[
+            {label:'A · 不认同', score:1},
+            {label:'B · 中立', score:2},
+            {label:'C · 认同', score:3}
+        ]
+    },
+    // Q19
+    {
+        code:'Ac3-2', model:'行动·执行', dim:'执行模式',
+        text:'我做事常常有计划，_____',
+        options:[
+            {label:'A · 然而计划不如变化快。', score:1},
+            {label:'B · 有时能完成，有时不能。', score:2},
+            {label:'C · 我讨厌被打破计划。', score:3}
+        ]
+    },
+    // Q20
+    {
+        code:'So2-1', model:'社交·边界', dim:'人际边界感',
+        text:'我和人相处主打一个电子围栏，靠太近会自动报警。',
+        options:[
+            {label:'A · 认同', score:1},
+            {label:'B · 中立', score:2},
+            {label:'C · 不认同', score:3}
+        ]
+    },
+    // Q21
+    {
+        code:'So2-2', model:'社交·边界', dim:'人际边界感',
+        text:'我渴望和我信任的人关系密切，熟得像失散多年的亲戚。',
+        options:[
+            {label:'A · 认同', score:1},
+            {label:'B · 中立', score:2},
+            {label:'C · 不认同', score:3}
+        ]
+    },
+    // Q22
+    {
+        code:'S2-1', model:'自我·认知', dim:'自我清晰度',
+        text:'我很清楚真正的自己是什么样的',
+        options:[
+            {label:'A · 不认同', score:1},
+            {label:'B · 中立', score:2},
+            {label:'C · 认同', score:3}
+        ]
+    },
+    // Q23
+    {
+        code:'So3-2', model:'社交·表达', dim:'表达真实度',
+        text:'我在不同人面前会表现出不一样的自己',
+        options:[
+            {label:'A · 不认同', score:1},
+            {label:'B · 中立', score:2},
+            {label:'C · 认同', score:3}
+        ]
+    },
+    // Q24
+    {
+        code:'A3-1', model:'态度·意义', dim:'人生意义感',
+        text:'我做事通常有目标。',
+        options:[
+            {label:'A · 不认同', score:1},
+            {label:'B · 中立', score:2},
+            {label:'C · 认同', score:3}
+        ]
+    },
+    // Q25
+    {
+        code:'E3-1', model:'情感·边界', dim:'边界与依赖',
+        text:'恋爱后，对象非常黏人，你作何感想？',
+        options:[
+            {label:'A · 那很爽了', score:1},
+            {label:'B · 都行无所谓', score:2},
+            {label:'C · 我更喜欢保留独立空间', score:3}
+        ]
+    },
+    // Q26
+    {
+        code:'E2-1', model:'情感·投入', dim:'情感投入度',
+        text:'我对天发誓，我对待每一份感情都是认真的！',
+        options:[
+            {label:'A · 并没有', score:1},
+            {label:'B · 也许？', score:2},
+            {label:'C · 是的！（问心无愧骄傲脸）', score:3}
+        ]
+    },
+    // Q27 【JOKE-R经典题】
+    {
+        code:'JOKE-GATE', model:'🤡 彩蛋', dim:'小丑触发',
+        text:'我不仅是屌丝，我还是joker,我还是咸鱼，这辈子没谈过一场恋爱，胆怯又自卑，我的青春就是一场又一场的意淫，每一天幻想着我也能有一个女孩子和我一起压马路，一起逛街，一起玩，现实却是爆了父母金币，读了个烂学校，混日子之后找班上，没有理想，没有目标，没有能力的三无人员，每次看到你能在网上开屌丝的玩笑，我都想哭，我就是地底下的老鼠，透过下水井的缝隙，窥探地上的各种美好，每一次看到这种都是对我心灵的一次伤害，对我生存空间的一次压缩，求求哥们给我们这种小丑一点活路吧，我真的不想在白天把枕巾哭湿一大片',
+        options:[
+            {label:'A · 我哭了。.', score:99},  // JOKE-R触发！
+            {label:'B · 这是什么。.', score:2},
+            {label:'C · 这不是我！', score:3}
+        ]
+    },
+    // Q28
+    {
+        code:'Ac1-2', model:'行动·动机', dim:'动机导向',
+        text:'你因便秘坐在马桶上（已长达30分钟），拉不出很难受。此时你更像',
+        options:[
+            {label:'A · 再坐三十分钟看看，说不定就有了。', score:1},
+            {label:'B · 用力拍打自己的屁股并说："死屁股，快拉啊！"', score:2},
+            {label:'C · 使用开塞露，快点拉出来才好。', score:3}
+        ]
+    },
+    // Q29
+    {
+        code:'E2-2', model:'情感·投入', dim:'情感投入度',
+        text:'你的恋爱对象是一个尊老爱幼，温柔敦厚，洁身自好，光明磊落，大义凛然，能言善辩，口才流利，观察入微，见多识广，博学多才，诲人不倦，和蔼可亲，平易待人，心地善良，慈眉善目，积极进取，意气风发，玉树临风，国色天香，倾国倾城，花容月貌的人，此时你会？',
+        options:[
+            {label:'A · 就算ta再优秀我也不会陷入太深。', score:1},
+            {label:'B · 会介于A和C之间。', score:2},
+            {label:'C · 会非常珍惜ta，也许会变成恋爱脑。', score:3}
+        ]
+    },
+    // Q30
+    {
+        code:'E3-2', model:'情感·边界', dim:'边界与依赖',
+        text:'我在任何关系里都很重视个人空间',
+        options:[
+            {label:'A · 我更喜欢依赖与被依赖', score:1},
+            {label:'B · 看情况', score:2},
+            {label:'C · 是的！（斩钉截铁地说道）', score:3}
+        ]
+    },
+    // Q31 【盲选题】
+    {
+        code:'BLIND', model:'❓ 盲选', dim:'随机因子',
+        text:'此题没有题目，请盲选',
+        options:[
+            {label:'A · 反复思考后感觉应该选A？', score:1},
+            {label:'B · 啊，要不选B？', score:2},
+            {label:'C · 不会就选C？', score:3}
+        ]
+    }
+];
+
+// Dimension mapping: which questions map to which dimension
+const DIM_MAP = {
+    'S1': ['S1-1'], 'S2': ['S2-1','S2-2'], 'S3': ['S3-1','S3-2'],
+    'E1': ['E1-1','E1-2'], 'E2': ['E2-1','E2-2'], 'E3': ['E3-1','E3-2'],
+    'A1': ['A1-1','A1-2'], 'A2': ['A2-1','A2-2'], 'A3': ['A3-1','A3-2'],
+    'Ac1':['Ac1-1','Ac1-2'],'Ac2':['Ac2-1'],'Ac3':['Ac3-1','Ac3-2'],
+    'So1':['So1-1','So1-2'],'So2':['So2-1','So2-2'],'So3':['So3-1','So3-2']
+};
+
+const DIM_NAMES = {
+    'S1':'自尊自信','S2':'自我清晰度','S3':'核心价值取向',
+    'E1':'依恋安全感','E2':'情感投入度','E3':'边界与依赖',
+    'A1':'世界观倾向','A2':'规则灵活度','A3':'人生意义感',
+    'Ac1':'内在动机导向','Ac2':'决策风格','Ac3':'日常执行模式',
+    'So1':'社交主动性','So2':'人际边界感','So3':'表达真实度'
+};
+
+const DIM_MODELS = {
+    'S1':'自我模型','S2':'自我模型','S3':'自我模型',
+    'E1':'情感模型','E2':'情感模型','E3':'情感模型',
+    'A1':'态度模型','A2':'态度模型','A3':'态度模型',
+    'Ac1':'行动驱力模型','Ac2':'行动驱力模型','Ac3':'行动驱力模型',
+    'So1':'社交模型','So2':'社交模型','So3':'社交模型'
+};
+
+// 25 Standard personality patterns + DRUNK
+const PERSONALITIES = {
+    'CTRL':{
+        code:'CTRL', name:'拿握者', slogan:'方向在我手中，全局尽在掌控。',
+        pattern:{'S1':'H','S2':'H','S3':'H','E1':'H','E2':'M','E3':'H','A1':'M','A2':'H','A3':'H','Ac1':'H','Ac2':'H','Ac3':'H','So1':'M','So2':'H','So3':'M'},
+        hrDesc:{
+            workStyle:`<strong>CTRL型员工是天生的项目管理者和流程优化师。</strong>他们对细节有着近乎苛刻的要求，擅长将复杂任务拆解为可执行的步骤。在工作中表现出极强的组织能力和时间管理能力，能够同时处理多个任务而不乱阵脚。他们喜欢掌控局面，对于不确定性较高的开放性任务会感到不适。
+            <br><br><strong>典型行为特征：</strong>主动制定项目甘特图、定期同步进度、对延期零容忍、习惯性地做Plan B。`,
+            teamRole:`<strong>团队角色：项目经理 / 流程负责人 / 质量把控者</strong>
+            <br><br>CTRL最适合担任需要强执行力和精确协调的角色。他们能在团队中充当"定海神针"，确保项目按时保质交付。但需注意不要过度控制，给团队成员留出发挥空间。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>项目管理专业人士(PMP) → 高级项目经理 → 项目总监</li>
+<li>运营管理 → COO路线</li>
+<li>产品运营 / 用户增长等数据驱动岗位</li>
+<li>咨询顾问（尤其是流程改进和组织效率方向）</li>`,
+            managerAdvice:`<li>给他们明确的KPI和deadline，然后放手让他们自主安排——CTRL最讨厌微观管理</li>
+<li>当他们提出流程优化建议时认真听取，这往往是他们的核心价值所在</li>
+<li>注意关注他们的压力水平，CTRL容易过度承担而忽视自身健康</li>
+<li>适合搭配创意型人才互补，CTRL负责落地执行</li>`
+        }
+    },
+    'ATM-er':{
+        code:'ATM-er', name:'奉献者', slogan:'你以为我只是付出吗？这是我的选择。',
+        pattern:{'S1':'H','S2':'H','S3':'H','E1':'H','E2':'H','E3':'H','A1':'H','A2':'H','A3':'H','Ac1':'H','Ac2':'M','Ac3':'H','So1':'M','So2':'H','So3':'L'},
+        hrDesc:{
+            workStyle:`<strong>ATM-er是组织中不可或缺的"稳定器"。</strong>他们以极强的责任心和可靠性著称，总是默默承担那些没人愿意做的脏活累活。他们在团队中的口碑通常极好，是大家公认的"靠谱担当"。但他们往往不善于拒绝，容易陷入过度承诺的陷阱。
+            <br><br><strong>典型行为特征：</strong>主动帮新人带路、加班完成团队遗留问题、从不推卸责任、会议中总是那个做纪要的人。`,
+            teamRole:`<strong>团队角色：团队粘合剂 / 知识传承者 / 新人导师</strong>
+            <br><br>ATM-er在团队中扮演着润滑剂的角色，能够有效降低内部摩擦。他们是新人的最佳导师人选，也适合承担知识管理和文化建设类的工作。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>培训发展(L&D) → 培训经理 → L&D总监</li>
+<li>HRBP / 组织发展专家</li>
+<li>客户成功管理(CSM)</li>
+<li>内部沟通 / 企业文化专员</li>`,
+            managerAdvice:`<li>帮助他们学会说"NO"，设置合理的工作边界</li>
+<li>给予充分的认可和感谢——ATM-er的价值容易被理所当然地忽略</li>
+<li>定期检查是否有过度工作的迹象，必要时强制休息</li>
+<li>他们是培养下一代人才的最佳人选，给他们导师角色的正式授权</li>`
+        }
+    },
+    'Dior-s':{
+        code:'Dior-s', name:'清醒者', slogan:'我不是不求上进，我是看透了本质。',
+        pattern:{'S1':'M','S2':'H','S3':'M','E1':'M','E2':'M','E3':'H','A1':'M','A2':'H','A3':'M','Ac1':'H','Ac2':'M','Ac3':'H','So1':'L','So2':'H','So3':'L'},
+        hrDesc:{
+            workStyle:`<strong>Dior-s型员工拥有一种难得的"冷眼旁观式"智慧。</strong>他们不会被表面的忙碌所迷惑，总能看到事情的本质。在组织政治和办公室斗争中，他们往往是看得最清的那个。他们的产出不一定是最多的，但质量通常很高，因为他们只在真正有意义的事情上投入精力。
+            <br><br><strong>典型行为特征：</strong>对无意义的会议保持沉默、用最少的话说出最有力的观点、拒绝参与内卷竞争、准时下班但效率极高。`,
+            teamRole:`<strong>团队角色：战略思考者 / 质疑者 / 效率审计员</strong>
+            <br><br>Dior-s能为团队提供独立的视角，帮助团队避免盲目跟风。他们适合担任"魔鬼代言人"的角色，在重大决策前提供批判性意见。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>战略分析 / 商业分析师</li>
+<li>独立研究 / 行业研究</li>
+<li>技术咨询 / 架构评审</li>
+<li>内容创作 / 知识工作者</li>`,
+            managerAdvice:`<li>尊重他们对"意义"的追求，分配的任务要有明确价值</li>
+<li>不要强迫他们参与形式主义的活动，那只会消耗信任</li>
+<li>利用他们的批判性思维来做项目复盘和质量审查</li>
+<li>他们不需要太多激励，需要的是尊重和自主权</li>`
+        }
+    },
+    'BOSS':{
+        code:'BOSS', name:'领航者', slogan:'方向盘给我，我来开。',
+        pattern:{'S1':'H','S2':'H','S3':'H','E1':'H','E2':'M','E3':'H','A1':'M','A2':'M','A3':'H','Ac1':'H','Ac2':'H','Ac3':'H','So1':'L','So2':'H','So3':'L'},
+        hrDesc:{
+            workStyle:`<strong>BOSS型员工天生具有领袖气质。</strong>他们自信、果敢、目标导向极强，在混乱的局面中能够迅速找到方向并带领团队前进。他们享受挑战，对平庸容忍度为零。但也可能因此显得强势甚至霸道，需要注意团队氛围的维护。
+            <br><br><strong>典型行为特征：</strong>会议上第一个发言、主动扛起最难的项目、对低绩效零容忍、不断设定更高的目标。`,
+            teamRole:`<strong>团队角色：团队Leader / 创始人 / 变革推动者</strong>
+            <br><br>BOSS是天生的领导者，适合在初创期或转型期担任核心领导角色。他们能够在高压环境下做出快速决策，带领团队穿越不确定性。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>创业 / 联合创始人</li>
+<li>事业部总经理 → VP → CEO路线</li>
+<li>投资 / 私募股权（需要敏锐的商业判断力）</li>
+<li>战略咨询合伙人级别</li>`,
+            managerAdvice:`<li>给他们足够大的舞台和决策权限，BOSS在受限环境中会感到窒息</li>
+<li>提醒他们注意倾听他人意见，避免"一言堂"</li>
+<li>将他们放在高挑战高回报的位置上，他们会发光发热</li>
+<li>配一个善于协调的副手，形成有效互补</li>`
+        }
+    },
+    'THAN-K':{
+        code:'THAN-K', name:'感恩者', slogan:'我感恩每一次遇见，每一份际遇。',
+        pattern:{'S1':'M','S2':'H','S3':'M','E1':'H','E2':'M','E3':'M','A1':'H','A2':'H','A3':'M','Ac1':'M','Ac2':'M','Ac3':'H','So1':'M','So2':'H','So3':'L'},
+        hrDesc:{
+            workStyle:`<strong>THAN-K型员工是团队的"正能量发电机"。</strong>他们善于从困境中发现机遇，从批评中提取建设性反馈。他们的乐观不是盲目的，而是建立在成熟心智基础上的积极心态。在团队士气低落时，THAN-K往往是那个把大家重新凝聚起来的人。
+            <br><br><strong>典型行为特征：</strong>每次会议都先肯定大家的努力、善于化解冲突、在困难时期依然保持高昂斗志、经常表达对他人的感谢。`,
+            teamRole:`<strong>团队角色：文化大使 / 冲突调解者 / 士气提振者</strong>
+            <br><br>THAN-K在跨部门协作和文化建设中具有不可替代的价值。他们能够弥合分歧、建立共识，是理想的团队协调者。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>企业文化 / 内部沟通</li>
+<li>客户关系管理(CRM)</li>
+<li>公共关系(PR) / 品牌传播</li>
+<li>员工体验(EX) / 员工敬业度管理</li>`,
+            managerAdvice:`<li>让他们参与文化建设相关工作，这是他们的天赋领域</li>
+<li>注意保护他们的积极性不被滥用，感恩不等于当老好人</li>
+<li>在团队遇到挫折时，请THAN-K来鼓舞士气效果奇佳</li>
+<li>帮助他们提升在冲突中说"不"的能力</li>`
+        }
+    },
+    'OH-NO':{
+        code:'OH-NO', name:'风控者', slogan:'哦不！我已经想到了所有风险。',
+        pattern:{'S1':'H','S2':'H','S3':'L','E1':'L','E2':'M','E3':'H','A1':'L','A2':'H','A3':'H','Ac1':'H','Ac2':'H','Ac3':'M','So1':'L','So2':'H','So3':'L'},
+        hrDesc:{
+            workStyle:`<strong>OH-NO型员工是组织的"风险雷达"。</strong>他们天生对潜在问题和隐患极其敏感，能够在危机爆发前发出预警。虽然有时候会被认为过于悲观或杞人忧天，但事实证明他们预警的事情往往会发生。他们是合规、风控、质量管理等领域的理想人才。
+            <br><br><strong>典型行为特征：</strong>每次提案都附上风险评估清单、对"差不多"三个字过敏、坚持走完所有审批流程、会议纪要里总有"注意事项"。`,
+            teamRole:`<strong>团队角色：风险管理者 / 合规官 / QA负责人</strong>
+            <br><br>OH-NO在涉及安全性、合规性和质量控制的工作中无可替代。他们是组织稳健运行的守护者。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>风险管理 / 合规(Compliance)</li>
+<li>质量保证(QA) / 测试管理</li>
+<li>内部控制 / 审计</li>
+<li>法务 / 合规顾问</li>`,
+            managerAdvice:`<li>重视他们的风险预警，不要简单地视为"负能量"</li>
+<li>给他们正式的风险管理职责，让他们的敏感性成为资产而非负担</li>
+<li>鼓励他们用数据和事实支撑担忧，减少主观焦虑成分</li>
+<li>平衡他们的风险意识与创新的必要性</li>`
+        }
+    },
+    'GOGO':{
+        code:'GOGO', name:'行者', slogan:'gogo~ 出发了就不回头。',
+        pattern:{'S1':'H','S2':'H','S3':'M','E1':'H','E2':'M','E3':'H','A1':'M','A2':'M','A3':'H','Ac1':'H','Ac2':'H','Ac3':'H','So1':'M','So2':'M','So3':'M'},
+        hrDesc:{
+            workStyle:`<strong>GOGO型员工是纯粹的执行机器。</strong>他们的思维模式极为线性——接到任务就去做，做完就划掉，然后接下一个。他们不过度思考"为什么"，专注于"怎么做"。这种特质使他们成为高效执行者的典范，但也可能导致缺乏战略思考。
+            <br><br><strong>典型行为特征：</strong>To-do list永远在不断变短、不喜欢开长会、回复消息极快、"先做了再说"是口头禅。`,
+            teamRole:`<strong>团队角色：高效执行者 / 运营骨干 / 项目推进者</strong>
+            <br><br>GOGO是任何需要快速落地的项目中不可或缺的力量。他们能把想法迅速变成现实，是敏捷团队的理想成员。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>运营执行 / 用户运营</li>
+<li>销售(Sales) / 商务拓展(BD)</li>
+<li>项目经理(偏执行)</li>
+<li>供应链 / 物流管理</li>`,
+            managerAdvice:`<li>给他们清晰的任务清单和截止日期，GOGO在这种模式下效率最高</li>
+<li>在他们埋头执行之前，确保方向的正确性——GOGO不会停下来质疑目标</li>
+<li>定期引导他们进行反思和总结，帮助建立战略思维</li>
+<li>他们是"做完就忘"的类型，需要做好文档沉淀</li>`
+        }
+    },
+    'SEXY':{
+        code:'SEXY', name:'魅力者', slogan:'魅力是一种选择，而我选择了闪耀。',
+        pattern:{'S1':'H','S2':'M','S3':'H','E1':'H','E2':'H','E3':'L','A1':'H','A2':'M','A3':'M','Ac1':'H','Ac2':'M','Ac3':'M','So1':'H','So2':'L','So3':'H'},
+        hrDesc:{
+            workStyle:`<strong>SEXY型员工自带强大的感染力和说服力。</strong>他们擅长在各种场合吸引注意力并获得支持。在演讲、汇报、客户洽谈等场景中表现卓越。他们的存在感能够为团队带来额外的曝光和资源。但需要注意避免过度依赖个人魅力而忽视实质工作能力。
+            <br><br><strong>典型行为特征：</strong>每次汇报都是一场小型TED演讲、客户面前游刃有余、社交媒体上活跃度高、善于打造个人品牌。`,
+            teamRole:`<strong>团队角色：对外发言人 / 商务拓展 / 品牌代表</strong>
+            <br><br>SEXY在需要对外展示和资源获取的场景中大放异彩。他们是组织形象的天然代言人。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>市场营销 / 品牌管理</li>
+<li>公关(PR) / 对外关系</li>
+<li>商务拓展(BD) / 大客户管理(KAM)</li>
+<li>投资人关系(IR) / 政府事务(GR)</li>`,
+            managerAdvice:`<li>把他们放在聚光灯下，让SEXY的天赋得到充分发挥</li>
+<li>提醒他们在注重形象的同时夯实专业基础</li>
+<li>利用他们的影响力帮助团队争取资源和曝光</li>
+<li>避免让他们长期处于幕后工作，那是对资源的浪费</li>`
+        }
+    },
+    'LOVE-R':{
+        code:'LOVE-R', name:'共情者', slogan:'爱意太满，世界显得有点贫瘠。',
+        pattern:{'S1':'M','S2':'L','S3':'H','E1':'L','E2':'H','E3':'L','A1':'H','A2':'L','A3':'H','Ac1':'M','Ac2':'L','Ac3':'M','So1':'M','So2':'L','So3':'H'},
+        hrDesc:{
+            workStyle:`<strong>LOVE-R型员工拥有极高的情感智商和同理心。</strong>他们能够敏锐感知他人的情绪变化，在团队合作中起到润滑作用。他们倾向于建立深厚的情感连接，这使得他们在需要高度信任和默契的工作中表现出色。但在需要客观理性的场景中可能会受到情绪影响。
+            <br><br><strong>典型行为特征：</strong>记得每位同事的生日、团队氛围不好时会主动关心、善于处理人际冲突、对客户的情感需求响应迅速。`,
+            teamRole:`<strong>团队角色：关系维护者 / 客户成功经理 / 团队协作者</strong>
+            <br><br>LOVE-R在任何需要建立和维护关系的岗位上都能大放异彩，特别是在服务型和关系驱动型的业务中。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>人力资源(HRBP方向)</li>
+<li>客户成功(CSM) / 客户服务管理</li>
+<li>用户体验(UX)研究</li>
+<li>心理咨询 / EAP(员工援助计划)</li>`,
+            managerAdvice:`<li>让他们参与客户对接和团队建设工作，发挥共情优势</li>
+<li>注意保护他们免受"情绪劳动"的过度消耗</li>
+<li>在需要"硬碰硬"的谈判场景中，为他们配备理性搭档</li>
+<li>他们对团队氛围的影响是隐性的但巨大的</li>`
+        }
+    },
+    'MUM':{
+        code:'MUM', name:'守护者', slogan:'我可以叫你一声妈妈吗？',
+        pattern:{'S1':'M','S2':'M','S3':'M','E1':'M','E2':'H','E3':'L','A1':'M','A2':'M','A3':'M','Ac1':'L','Ac2':'M','Ac3':'M','So1':'H','So2':'L','So3':'L'},
+        hrDesc:{
+            workStyle:`<strong>MUM型员工像一位温和而有智慧的守护者。</strong>他们善于照顾他人的需求，营造安全包容的环境。他们拥有出色的直觉，能够察觉到团队成员的情绪变化并及时给予支持。但有时会因为过度关注他人而忽略自己的需求和发展。
+            <br><br><strong>典型行为特征：</strong>总是多带一杯咖啡以防有人需要、新人入职时的最佳向导、团队聚餐时的气氛组、会在私下关心每个人的状态。`,
+            teamRole:`<strong>团队角色：团队关怀者 / 文化建设者 / 新人辅导员</strong>
+            <br><br>MUM是团队温度的主要来源。在快速变化的组织环境中，他们提供的稳定感和归属感是无价的。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>人力资源管理（ER/员工关系方向）</li>
+<li>行政 / 办公室管理</li>
+<li>培训发展中的辅导教练方向</li>
+<li>员工体验(EX)设计</li>`,
+            managerAdvice:`<li>正式赋予他们团队关怀的职责，让隐形贡献显性化</li>
+<li>关注他们自身的职业发展，不要只让他们"照顾别人"</li>
+<li>他们是组织文化的活载体，要保护好这种稀缺品质</li>
+<li>在变革期间请MUM来安抚团队情绪，效果显著</li>`
+        }
+    },
+    'FAKE':{
+        code:'FAKE', name:'变色龙', slogan:'已经，没有固定的我了。',
+        pattern:{'S1':'H','S2':'L','S3':'M','E1':'M','E2':'M','E3':'L','A1':'M','A2':'L','A3':'M','Ac1':'M','Ac2':'L','Ac3':'M','So1':'H','So2':'L','So3':'H'},
+        hrDesc:{
+            workStyle:`<strong>FAKE型员工是最高级的"适应者"。</strong>他们能够根据环境和对象的不同，自如切换自己的行为模式和沟通方式。这不是虚伪，而是一种高级的社会智能。他们在跨部门协作、多方利益协调等复杂场景中具有独特优势。但长期的角色切换也可能导致自我认知的模糊。
+            <br><br><strong>典型行为特征：</strong>在不同领导面前呈现不同风格、会议中根据听众调整发言方式、擅长"翻译"不同部门的语言、极少与人发生正面冲突。`,
+            teamRole:`<strong>团队角色：跨界协调者 / 利益相关方管理 / 外部联络</strong>
+            <br><br>FAKE在复杂的组织环境中如鱼得水，特别适合需要在多方之间斡旋和协调的岗位。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>总经理助理(GA) / 总经办</li>
+<li>政府事务(GR) / 公共政策</li>
+<li>战略联盟 / 合作伙伴管理</li>
+<li>变革管理（需要协调多方利益）</li>`,
+            managerAdvice:`<li>充分利用他们的适应能力来处理棘手的人际和政治问题</li>
+<li>帮助他们找到稳定的内核，避免迷失在角色扮演中</li>
+<li>他们能看到各方立场，是绝佳的信息整合者</li>
+<li>定期和他们进行一对一深入对话，帮助他们锚定真实的自我</li>`
+        }
+    },
+    'OJBK':{
+        code:'OJBK', name:'佛系者', slogan:'我说随便，是真的随便。',
+        pattern:{'S1':'M','S2':'M','S3':'M','E1':'M','E2':'M','E3':'M','A1':'H','A2':'M','A3':'L','Ac1':'L','Ac2':'M','Ac3':'M','So1':'M','So2':'M','So3':'L'},
+        hrDesc:{
+            workStyle:`<strong>OJBK型员工展现出一种罕见的"低摩擦"工作风格。</strong>他们对大多数事物持开放和中立的态度，不容易产生强烈的偏好或抵触。这使得他们在配合性工作上表现出色，但也可能在需要主动性和热情的场景中显得动力不足。
+            <br><br><strong>典型行为特征：</strong>"都行"、"都可以"、"你定"、极少抱怨、对加班调休都不太在意、会议中很少反对。`,
+            teamRole:`<strong>团队角色：弹性支援者 / 多功能备胎 / 稳定执行者</strong>
+            <br><br>OJBK是团队中最可靠的"填坑选手"，哪里需要就能去哪里。他们的低要求和高适应性使其成为组织运转的重要基石。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>通用型运营 / 综合管理培训生</li>
+<li>数据分析 / 后台技术支持</li>
+<li>流程化标准化岗位</li>
+<li>质量监控 / 合规审核</li>`,
+            managerAdvice:`<li>不要误读他们的"随意"为不在乎，尝试激发他们的内在动力</li>
+<li>OJBK需要的是清晰的指令而非宏大的愿景</li>
+<li>他们稳定性极高，适合承接持续性、常规性的核心业务</li>
+<li>定期确认他们的职业满意度，佛系不代表没有诉求</li>`
+        }
+    },
+    'MALO':{
+        code:'MALO', name:'创造者', slogan:'人生是个副本，我要玩出花来。',
+        pattern:{'S1':'M','S2':'L','S3':'H','E1':'M','E2':'H','E3':'M','A1':'M','A2':'L','A3':'H','Ac1':'M','Ac2':'L','Ac3':'H','So1':'L','So2':'L','So3':'M','So4':'H'},
+        hrDesc:{
+            workStyle:`<strong>MALO型员工是组织中的"创意引擎"。</strong>他们不受常规思维束缚，总能跳出框架想出令人耳目一新的解决方案。他们带着一种游戏般的轻松感面对工作挑战，这种心态反而让他们在创新方面表现出色。但在需要严格遵守流程的场景中可能会遇到阻力。
+            <br><br><strong>典型行为特征：</strong>头脑风暴中点子最多、喜欢挑战"不可能"、对无聊的重复工作零容忍、办公桌总是乱中有序、时不时有让人惊叹的想法。`,
+            teamRole:`<strong>团队角色：创新发起者 / 产品创意 / 问题破解者</strong>
+            <br><br>MALO在研发、产品设计、营销创意等领域是不可多得的人才。他们能为团队带来全新的视角和可能性。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>产品设计 / 用户体验设计</li>
+<li>创新研发(R&D)</li>
+<li>品牌创意 / 内容策略</li>
+<li>创业（尤其适合创新型赛道）</li>`,
+            managerAdvice:`<li>给他们足够的创造空间，少设限制多给资源</li>
+<li>理解他们的"不守规矩"往往是创新的前奏</li>
+<li>将他们与执行力强的CTRL或GOGO搭配，创意+落地的黄金组合</li>
+<li>不要用标准化的指标衡量MALO，那会扼杀创造力</li>`
+        }
+    },
+    'JOKE-R':{
+        code:'JOKE-R', name:'乐天派', slogan:'原来我们都是小丑，那就一起笑吧。',
+        pattern:{'S1':'L','S2':'L','S3':'L','E1':'L','E2':'H','E3':'L','A1':'L','A2':'M','A3':'L','Ac1':'L','Ac2':'L','Ac3':'L','So1':'M','So2':'L','So3':'M'},
+        hrDesc:{
+            workStyle:`<strong>JOKE-R型员工用幽默和自嘲来应对工作和生活中的压力。</strong>他们是团队中的开心果，总能在紧张的气氛中制造轻松时刻。但在这层幽默的外壳下，可能隐藏着对自我的怀疑和对现状的不满。他们需要被看见的不只是"搞笑"的一面，还有真实的能力和价值。
+            <br><br><strong>典型行为特征：</strong>团建时的灵魂人物、用梗化解尴尬场面、自嘲式幽默、看似轻松实则敏感、朋友圈里的段子手。`,
+            teamRole:`<strong>团队角色：氛围调节者 / 创意催化剂 / 团队粘合剂</strong>
+            <br><br>JOKE-R在缓解团队压力、促进沟通方面具有独特价值。他们的幽默感能够降低沟通门槛、增进团队凝聚力。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>内容创作 / 社媒运营</li>
+<li>活动策划 / 用户体验</li>
+<li>创意文案 / 品牌传播</li>
+<li>培训师（特别是互动型培训）</li>`,
+            managerAdvice:`<li>欣赏他们的幽默天赋，但也要发掘和认可他们严肃的一面</li>
+<li>JOKER可能是团队情绪的晴雨表——当他们沉默时要注意</li>
+<li>给他们安全的表达空间，让他们展示幽默之外的才华</li>
+<li>不要让他们沦为"永远的配角"或"团队吉祥物"</li>`
+        }
+    },
+    'WOC!':{
+        code:'WOC!', name:'洞察者', slogan:'卧槽，我又猜对了。',
+        pattern:{'S1':'H','S2':'H','S3':'L','E1':'H','E2':'M','E3':'H','A1':'M','A2':'M','A3':'H','Ac1':'H','Ac2':'H','Ac3':'M','So1':'L','So2':'H','So3':'H'},
+        hrDesc:{
+            workStyle:`<strong>WOC!型员工表面大大咧咧，实则洞察力惊人。</strong>他们用夸张的表达掩盖敏锐的观察力和深刻的判断力。在团队讨论中，他们往往一针见血地指出问题的核心，但表达方式让人以为是随口一说。这是一种高级的"隐藏实力"策略。
+            <br><br><strong>典型行为特征：</strong>口头禅是"卧槽"系列、看似不正经但每次都说对了、不在公开场合争功、关键时刻总能给出关键信息。`,
+            teamRole:`<strong>团队角色：情报收集者 / 局势研判 / 关键信息源</strong>
+            <br><br>WOC!在信息收集和分析方面有独特天赋。他们似乎总能知道别人不知道的事情，并在关键时刻派上用场。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>市场情报 / 竞品分析</li>
+<li>战略研究 / 商业分析</li>
+<li>尽职调查 / 风险评估</li>
+<li>调查记者式的研究岗位</li>`,
+            managerAdvice:`<li>透过他们的表达方式看到实质内容，WOC!说的"卧槽"背后往往有料</li>
+<li>给他们一些需要广泛信息收集和交叉验证的任务</li>
+<li>他们不适合做台前的汇报者，更适合幕后的分析和策应</li>
+<li>保护他们的信息源网络，这是他们的核心竞争力</li>`
+        }
+    },
+    'THIN-K':{
+        code:'THIN-K', name:'沉思者', slogan:'已深度思考100秒。',
+        pattern:{'S1':'H','S2':'H','S3':'L','E1':'H','E2':'M','E3':'H','A1':'M','A2':'L','A3':'H','Ac1':'M','Ac2':'H','Ac3':'M','So1':'L','So2':'H','So3':'H'},
+        hrDesc:{
+            workStyle:`<strong>THIN-K型员工是团队中的"大脑"。</strong>他们热爱思考，对信息的质量和逻辑严密性有极高要求。在做决策之前，他们会尽可能多地收集信息、分析利弊。这种谨慎的态度使他们在需要深思熟虑的重大决策中表现优异，但也可能在需要快速反应的场景中显得迟缓。
+            <br><br><strong>典型行为特征：</strong>会议中话不多但句句有分量、喜欢问"为什么"、邮件写得像论文、决策前必做详尽的调研分析、独处时效率最高。`,
+            teamRole:`<strong>团队角色：战略分析师 / 技术架构师 / 决策参谋</strong>
+            <br><br>THIN-K在需要深度思考和复杂分析的岗位上不可替代。他们适合处理非结构化、高复杂度的问题。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>战略咨询 / 管理咨询</li>
+<li>数据科学 / 算法工程师</li>
+<li>技术研究 / 架构设计</li>
+<li>投资研究 / 行业分析</li>`,
+            managerAdvice:`<li>给他们充足的思考时间，不要催促THIN-K做快速决策</li>
+<li>他们的分析报告值得认真阅读，往往蕴含深刻见解</li>
+<li>将他们与决策快的BOSS或GOGO搭配，形成"思考+行动"组合</li>
+<li>尊重他们的独立工作时间和空间需求</li>`
+        }
+    },
+    'SHIT':{
+        code:'SHIT', name:'实干家', slogan:'嘴上骂骂咧咧，手上从未停歇。',
+        pattern:{'S1':'H','S2':'H','S3':'L','E1':'H','E2':'L','E3':'H','A1':'L','A2':'M','A3':'M','Ac1':'H','Ac2':'H','Ac3':'M','So1':'L','So2':'H','So3':'H'},
+        hrDesc:{
+            workStyle:`<strong>SHIT型员工是典型的"刀子嘴豆腐心"实干家。</strong>他们一边抱怨一边干活，而且干得比谁都好。他们对不合理的事物保持着尖锐的批判态度，但同时又具备强大的执行能力和责任感。这种矛盾统一的特质使他们成为组织中最可靠的问题解决者之一。
+            <br><br><strong>典型行为特征：</strong>口头禅是各种吐槽、但交付质量从未下降、最擅长救火和处理烂摊子、对官僚主义零容忍、嘴上说要辞职身体却很诚实。`,
+            teamRole:`<strong>团队角色：问题终结者 / 危机处理专家 / 质量把关人</strong>
+            <br><br>SHIT在处理棘手问题和紧急状况时表现出色。他们是那种"有困难找XX"的存在。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>运维工程 / DevOps</li>
+<li>项目管理（危机处理方向）</li>
+<li>客户投诉处理 / 售后管理</li>
+<li>流程改进 / 变革管理</li>`,
+            managerAdvice:`<li>接受他们的吐槽方式，那是SHIT释放压力的途径</li>
+<li>他们吐槽越多的地方，往往越需要改进——把抱怨转化为改进建议</li>
+<li>SHIT是处理"没人愿意干的活"的最佳人选</li>
+<li>定期认可他们的贡献，否则他们可能真的会走</li>`
+        }
+    },
+    'ZZZZ':{
+        code:'ZZZZ', name:'爆发者', slogan:'没死，只是在蓄力。',
+        pattern:{'S1':'M','S2':'H','S3':'L','E1':'M','E2':'L','E3':'H','A1':'L','A2':'M','A3':'L','Ac1':'M','Ac2':'M','Ac3':'L','So1':'L','So2':'H','So3':'M'},
+        hrDesc:{
+            workStyle:`<strong>ZZZZ型员工属于"Deadline驱动型"人才。</strong>他们在非紧迫状态下可能表现平平，但一旦临近截止日期就会爆发出惊人的效率和创造力。这种工作节奏并非懒惰，而是一种特殊的高压激发机制。他们需要的不是更多的督促，而是更合理的时间规划。
+            <br><br><strong>典型行为特征：</strong>平时看起来不紧不慢、最后两天通宵赶工但质量不错、对提前完成的任务反而感到不安、在压力下状态最佳、群消息经常已读不回直到@全体。`,
+            teamRole:`<strong>团队角色：冲刺型执行者 / 紧急项目负责人</strong>
+            <br><br>ZZZZ在有明确时间压力的项目中表现最好。他们适合承担有时间节点的关键任务。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>新闻媒体 / 时效性强的内容生产</li>
+<li>活动策划执行（有固定日期的项目）</li>
+<li>敏捷开发中的Sprint制工作</li>
+<li>创业公司的早期阶段（节奏快、变化快）</li>`,
+            managerAdvice:`<li>将大任务拆分为多个小deadline，激活ZZZZ的爆发力</li>
+<li>不要用"日常表现"来评判ZZZZ，要看最终交付</li>
+<li>帮助他们建立更好的时间管理习惯，而非单纯施压</li>
+<li>在非冲刺期给他们相对宽松的空间来"蓄电"</li>`
+        }
+    },
+    'POOR':{
+        code:'POOR', name:'专注者', slogan:'我穷，但我很专。',
+        pattern:{'S1':'H','S2':'H','S3':'L','E1':'M','E2':'L','E3':'H','A1':'L','A2':'M','A3':'H','Ac1':'H','Ac2':'H','Ac3':'H','So1':'L','So2':'H','So3':'L'},
+        hrDesc:{
+            workStyle:`<strong>POOR型员工展现了极致的聚焦能力。</strong>他们能够屏蔽外界干扰，将自己所有的精力和资源投入到少数几个重点领域。这种"贫困式"的资源分配策略实际上是一种高效的专注模式——他们不是资源不足，而是选择了极度聚焦。
+            <br><br><strong>典型行为特征：</strong>对自己关注的领域如数家珍、对无关事务几乎零兴趣、社交圈小但专业圈子深、能在一个细分领域深耕多年、不善 multitasking 但单线程效率极高。`,
+            teamRole:`<strong>团队角色：技术专家 / 深度研究者 / 核心攻坚手</strong>
+            <br><br>POOR在需要深度专研的技术或学术领域表现卓越。他们是团队的专业护城河。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>技术研发 / R&D</li>
+<li>学术研究 / 博士后路径</li>
+<li>专业技术顾问</li>
+<li>垂直领域的KOL / 思想领袖</li>`,
+            managerAdvice:`<li>保护POOR的专注环境，减少不必要的会议和杂务干扰</li>
+<li>给他们足够的时间和空间去钻研，不要用短期指标考核</li>
+<li>POOR的知识深度是团队的核心竞争力，要善加利用</li>
+<li>在需要广度的场景中为他们配备协作伙伴</li>`
+        }
+    },
+    'MONK':{
+        code:'MONK', name:'独行者', slogan:'没有那种世俗的欲望。',
+        pattern:{'S1':'H','S2':'H','S3':'L','E1':'L','E2':'L','E3':'L','A1':'L','A2':'L','A3':'L','Ac1':'M','Ac2':'M','Ac3':'L','So1':'L','So2':'H','So3':'M'},
+        hrDesc:{
+            workStyle:`<strong>MONK型员工追求精神世界的丰富胜过物质回报。</strong>他们通常对权力、地位和金钱不太感兴趣，更看重工作的意义和个人成长的空间。他们能够忍受孤独和寂寞，在需要长期专注和深度思考的工作中表现出色。
+            <br><br><strong>典型行为特征：</strong>不爱参加团建和社交活动、喜欢独立工作、对升职加薪的反应平淡、有自己的精神世界、工作效率高但不爱表现。`,
+            teamRole:`<strong>团队角色：独立研究员 / 深度思考者 / 专家型贡献者</strong>
+            <br><br>MONK在需要高度专注和独立判断的岗位上最为合适。他们是组织中的"智者"角色。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>科学研究 / 学术界</li>
+<li>哲学 / 社会学研究</li>
+<li>技术开发（纯技术路线）</li>
+<li>写作 / 翻译 / 编辑</li>`,
+            managerAdvice:`<li>尊重MONK的独立性，不要强行拉入社交</li>
+<li>物质激励对他们效果有限，更多关注工作的意义感</li>
+<li>MONK的产出通常是高质量的，值得耐心等待</li>
+<li>给他们远程办公或灵活工作的选项</li>`
+        }
+    },
+    'IMSB':{
+        code:'IMSB', name:'矛盾体', slogan:'认真的么？我真的是这样吗？',
+        pattern:{'S1':'L','S2':'L','S3':'M','E1':'L','E2':'M','E3':'M','A1':'L','A2':'L','A3':'L','Ac1':'L','Ac2':'L','Ac3':'L','So1':'M','So2':'L','So3':'M'},
+        hrDesc:{
+            workStyle:`<strong>IMSB型员工的内心世界充满了矛盾和挣扎。</strong>他们既渴望又害怕，既想冲又犹豫，这种内在冲突使得他们在行动上常常表现出不一致。但这并不意味着他们没有能力，相反，IMSB往往具有丰富的内心世界和强烈的感受力。他们需要的是一个安全、支持性的环境来释放潜能。
+            <br><br><strong>典型行为特征：</strong>想做的事很多但迈不出第一步、事后反复回想当时的每一个细节、在人群中容易紧张但又渴望连接、对自己的判断极度不确定。`,
+            teamRole:`<strong>团队角色：潜力股 / 需要成长的跟随者 / 特殊视角贡献者</strong>
+            <br><br>IMSB需要时间和正确的引导来建立自信。一旦突破内心的障碍，他们的发展潜力巨大。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>从基层做起，逐步积累经验和信心</li>
+<li>艺术创作 / 写作等表达性工作</li>
+<li>用户研究 / 心理学相关</li>
+<li>任何允许慢热型成长的岗位</li>`,
+            managerAdvice:`<li>给IMSB足够的耐心和安全感，不要急于求成</li>
+<li>小步快跑式的任务分配，让他们逐步建立成就感</li>
+<li>指定一位经验丰富的导师进行一对一指导</li>
+<li>公开表扬他们的进步，哪怕是小小的进步</li>`
+        }
+    },
+    'SOLO':{
+        code:'SOLO', name:'独行侠', slogan:'国王的加冕仪式，通常都是一个人。',
+        pattern:{'S1':'L','S2':'M','S3':'L','E1':'L','E2':'H','E3':'H','A1':'L','A2':'H','A3':'L','Ac1':'L','Ac2':'L','Ac3':'L','So1':'L','So2':'H','So3':'M'},
+        hrDesc:{
+            workStyle:`<strong>SOLO型员工偏爱独立作战，对团队协作有一定抗拒。</strong>这并非不擅长合作，而是他们发现在独自工作时效率更高、质量更好。SOLO通常具有较强的自我驱动力和专业技能，能够在最小化依赖的情况下完成任务。
+            <br><br><strong>典型行为特征：</strong>更喜欢独立承担完整模块、开会时话不多但会后产出高、对无效协作感到疲惫、有一技之长且精通、通讯软件上经常显示"忙碌"。`,
+            teamRole:`<strong>团队角色：独立贡献者(IC) / 技术专家 / 全栈能手</strong>
+            <br><br>SOLO在可以独立完成的岗位上最为出色。他们适合承担端到端的任务 ownership。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>独立开发者 / 全栈工程师</li>
+<li>自由职业 / 顾问</li>
+<li>个体创作者 / 知识IP</li>
+<li>需要高度独立性的研究岗位</li>`,
+            managerAdvice:`<li>给SOLO完整的任务所有权而非碎片化的分工</li>
+<li>减少不必要的会议和协作要求，最大化他们的独立工作时间</li>
+<li>SOLO的成长需要的是资源和支持而非监督和控制</li>
+<li>在必须协作的场合，提前说明目的和期望</li>`
+        }
+    },
+    'FUCK':{
+        code:'FUCK', name:'反叛者', slogan:'操！这是什么破规矩？',
+        pattern:{'S1':'M','S2':'L','S3':'L','E1':'H','E2':'H','E3':'L','A1':'L','A2':'L','A3':'L','Ac1':'M','Ac2':'L','Ac3':'L','So1':'H','So2':'H','So3':'H'},
+        hrDesc:{
+            workStyle:`<strong>FUCK型员工是组织中的"鲶鱼"。</strong>他们天生反叛权威和陈规陋习，敢于挑战现状和表达不满。这种特质如果加以正确引导，可以成为推动变革和创新的重要力量；但如果任其发展，也可能成为团队的不稳定因素。
+            <br><br><strong>典型行为特征：</strong>直言不讳地指出问题、对不合理的规定公然挑战、会议中经常唱反调、有很强的正义感、不惧怕冲突和对抗。`,
+            teamRole:`<strong>团队角色：变革推动者 / 内部创业者 / 打破常规者</strong>
+            <br><br>FUCK最适合在需要颠覆性思维和大胆创新的环境中发挥作用。他们不适合高度规范化和层级分明的传统组织。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>创业（尤其是颠覆式创新方向）</li>
+<li>产品创新 / 设计思维</li>
+<li>社会企业 / 公益创新</li>
+<li>咨询顾问（外部视角的挑战者）</li>`,
+            managerAdvice:`<li>将FUCK的反叛能量引向建设性的渠道——让他们主导变革项目</li>
+<li>给他们合法的发声渠道，否则他们会找到非法的</li>
+<li>FUCK的存在是对组织健康的检验——如果他们安静了才是危险的信号</li>
+<li>不要试图"驯服"FUCK，要与他们建立相互尊重的合作关系</li>`
+        }
+    },
+    'DEAD':{
+        code:'DEAD', name:'超然者', slogan:'我，还活着吗？',
+        pattern:{'S1':'L','S2':'L','S3':'L','E1':'L','E2':'M','E3':'L','A1':'L','A2':'M','A3':'L','Ac1':'L','Ac2':'L','Ac3':'L','So1':'L','So2':'H','So3':'M'},
+        hrDesc:{
+            workStyle:`<strong>DEAD型员工表现出极低的驱动力和参与感。</strong>这可能源于多种原因——职业倦怠、价值观 mismatch、或者对当前环境的彻底失望。他们并非没有能力，而是失去了投入的动力。重新点燃DEAD的热情需要找到真正的触发点。
+            <br><br><strong>典型行为特征：</strong>对任何事情都提不起劲、会议中几乎不发言、只做最低限度的工作、表情淡漠、对奖励和惩罚都反应平平。`,
+            teamRole:`<strong>当前状态：需要重新激活 / 待观察</strong>
+            <br><br>DEAD需要一次深入的职业生涯对话来找出根本原因。可能是岗位不匹配、缺乏挑战性，或者是个人生活中遇到了困难。`,
+            careerPath:`<strong>当前首要任务：诊断与激活</strong>
+            <li>首先进行一对一深度谈话，了解根本原因</li>
+<li>如果是岗位不匹配，考虑转岗或重新分配工作</li>
+<li>如果是职业倦怠，考虑休假或轮岗</li>
+<li>如果确实是价值观不合，好聚好散可能是最好的选择</li>`,
+            managerAdvice:`<li>不要用更多的KPI和压力来"唤醒"DEAD，那样只会适得其反</li>
+<li>真诚地了解他们的想法和感受，不带评判</li>
+<li>探讨是否有其他岗位或项目能重新激发他们的兴趣</li>
+<li>DEAD的状态可能是组织文化的镜子——反思是否也有其他人有类似感受</li>`
+        }
+    },
+    'IMFW':{
+        code:'IMFW', name:'依赖者', slogan:'我真的...还可以吗？',
+        pattern:{'S1':'L','S2':'L','S3':'L','E1':'H','E2':'H','E3':'L','A1':'L','A2':'L','A3':'L','Ac1':'L','Ac2':'L','Ac3':'L','So1':'M','So2':'L','So3':'L'},
+        hrDesc:{
+            workStyle:`<strong>IMFW型员工需要较多的外部支持和确认。</strong>他们的自信心和自主性有待发展，在独立面对挑战时容易感到不安。但这并不意味着他们没有潜力，恰恰相反，IMFW在获得充分支持和指导的情况下，可以展现出极高的忠诚度和成长速度。
+            <br><br><strong>典型行为特征：</strong>经常寻求确认和反馈、对批评较为敏感、在明确指令下表现良好、害怕犯错、对认可的渴望非常强烈、需要一个可信赖的领导。`,
+            teamRole:`<strong>团队角色：学习型成员 / 忠诚执行者 / 需要培养的新人</strong>
+            <br><br>IMFW在良好的导师制度和 supportive 的文化环境下可以快速成长。他们最大的优势是一旦建立起信任，忠诚度极高。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>从助理/专员开始，逐步建立能力和自信</li>
+<li>选择有良好导师文化的公司和团队</li>
+<li>通过系统的培训和认证来建立专业信心</li>
+<li>寻找可以长期发展的平台而非频繁跳槽</li>`,
+            managerAdvice:`<li>给IMFW清晰具体的指令和期望，减少模糊性</li>
+<li>建立定期反馈机制，及时给予认可和建设性指导</li>
+<li>分配一个有耐心的资深员工作为 mentor</li>
+<li>逐步增加任务的复杂度和自主权，循序渐进地建立自信</li>`
+        }
+    },
+    'HHHH':{
+        code:'HHHH', name:'自由灵魂', slogan:'哈哈哈哈哈哈哈！',
+        pattern:{}, // Special: no fixed pattern
+        hrDesc:{
+            workStyle:`<strong>HHHH型员工是一个难以被归类"的独特存在。</strong>你的维度得分分布非常特殊，无法匹配到任何一种标准的职场人格类型。这意味着你可能是一个多面手，或者在各个维度上都保持着某种独特的平衡。这种"不可定义性"本身就是一种稀缺的特质。
+            <br><br><strong>可能的情况：</strong>你可能在不同的场景下展现出截然不同的工作风格；或者你在某些方面非常突出而在另一些方面又异常低调；又或者你就是那种让HR系统崩溃的"例外型人才"。`,
+            teamRole:`<strong>团队角色：万金油 / 变数因子 / 突破性人才</strong>
+            <br><br>HHHH适合在多变的环境中发挥作用，能够填补团队的各种空缺。你是组织中的"瑞士军刀"。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>创业 / 连续创业者</li>
+<li>复合型人才路线（如技术+商业+设计）</li>
+<li>咨询 / 自由职业</li>
+<li>任何需要灵活应变和创新思维的岗位</li>`,
+            managerAdvice:`<li>不要试图把HHHH塞进任何一个标准模板</li>
+<li>给这类人才最大的自由度和灵活性</li>
+<li>他们可能在最意想不到的地方创造最大价值</li>
+<li>定期重新评估HHHH的角色定位，因为他们在不断变化</li>`
+        }
+    },
+    'DRUNK':{
+        code:'DRUNK', name:'狂欢者', slogan:'烈酒烧喉，不得不醉。',
+        pattern:{}, // Hidden: triggered by drinking gate
+        hrDesc:{
+            workStyle:`<strong>DRUNK型员工是团队中的"气氛担当"和"社交中心"。</strong>他们热衷于各类社交活动，善于在非正式场合建立人际关系。他们的能量来源很大程度上来自于与他人的互动和集体活动。在工作场景中，DRUNK通常表现出极强的亲和力和感染力，能够快速拉近人与人之间的距离。
+            <br><br><strong>典型行为特征：</strong>团队活动的组织者和积极参与者、善于在饭局和聚会中建立关系、情绪起伏较大但恢复很快、喜欢热闹排斥孤独、在社交场合如鱼得水。`,
+            teamRole:`<strong>团队角色：社交枢纽 / 团队活动策划 / 文化传播者</strong>
+            <br><br>DRUNK在需要大量对外联络和内部凝聚力的岗位上表现突出。他们是组织社会资本的重要构建者。`,
+            careerPath:`<strong>推荐发展方向：</strong>
+            <li>商务拓展(BD) / 销售</li>
+<li>市场活动 / 会展策划</li>
+<li>公关 / 媒体关系</li>
+<li>社群运营 / 用户增长</li>`,
+            managerAdvice:`<li>利用DRUNK的社交天赋来促进团队融合和外部关系</li>
+<li>注意引导他们将社交能量部分转化为工作产能</li>
+<li>在需要"破冰"和"暖场"的场景中优先想到DRUNK</li>
+<li>关注他们的工作与生活的平衡，避免社交疲劳影响工作质量</li>`
+        }
+    }
+};
+
+// ============================================================
+// STATE VARIABLES
+// ============================================================
+
+let currentQuestion = 0;
+let answers = {};
+let isDrunk = false;
+
+// ============================================================
+// INITIALIZATION
+// ============================================================
+
+document.getElementById('loadingOverlay').style.display = 'none';
+
+function startTest() {
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('testScreen').style.display = 'block';
+    currentQuestion = 0;
+    answers = {};
+    isDrunk = false;
+    renderQuestion();
+}
+
+// ============================================================
+// RENDER QUESTION
+// ============================================================
+
+function renderQuestion() {
+    const q = QUESTIONS[currentQuestion];
+    document.getElementById('qNumber').textContent = `Q${String(currentQuestion + 1).padStart(2, '0')}`;
+    document.getElementById('qText').textContent = q.text;
+    document.getElementById('dimensionTag').textContent = `${q.model} · ${q.dim}`;
+    document.getElementById('progressText').textContent = `${currentQuestion + 1} / ${QUESTIONS.length}`;
+    document.getElementById('progressBar').style.width = `${((currentQuestion + 1) / QUESTIONS.length) * 100}%`;
+    
+    const optsContainer = document.getElementById('optionsList');
+    optsContainer.innerHTML = '';
+    
+    q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.dataset.index = idx;
+        
+        if (answers[currentQuestion] !== undefined && answers[currentQuestion] === idx) {
+            btn.classList.add('selected');
+        }
+        
+        const letters = ['A','B','C','D'];
+        btn.innerHTML = `<span class="option-letter">${letters[idx]}</span>${opt.label}`;
+        btn.onclick = () => selectOption(idx);
+        optsContainer.appendChild(btn);
+    });
+    
+    // Nav buttons state
+    document.getElementById('btnPrev').disabled = currentQuestion === 0;
+    
+    const isLast = currentQuestion === QUESTIONS.length - 1;
+    const nextBtn = document.getElementById('btnNext');
+    nextBtn.disabled = answers[currentQuestion] === undefined;
+    
+    if (isLast) {
+        nextBtn.textContent = '✓ 提交测试';
+        nextBtn.className = 'btn-nav btn-submit';
+        nextBtn.onclick = submitTest;
+    } else {
+        nextBtn.textContent = '下一题 →';
+        nextBtn.className = 'btn-nav btn-next';
+        nextBtn.onclick = nextQuestion;
+    }
+}
+
+function selectOption(idx) {
+    answers[currentQuestion] = idx;
+    const buttons = document.querySelectorAll('.option-btn');
+    buttons.forEach((btn, i) => {
+        btn.classList.toggle('selected', i === idx);
+    });
+    document.getElementById('btnNext').disabled = false;
+}
+
+function nextQuestion() {
+    if (currentQuestion < QUESTIONS.length - 1) {
+        currentQuestion++;
+        renderQuestion();
+    }
+}
+
+function prevQuestion() {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        renderQuestion();
+    }
+}
+
+// ============================================================
+// CALCULATE & SUBMIT
+// ============================================================
+
+function submitTest() {
+    // Show loading
+    document.getElementById('loadingOverlay').style.display = 'flex';
+    
+    setTimeout(() => {
+        calculateResults();
+        showResults();
+        document.getElementById('loadingOverlay').style.display = 'none';
+    }, 1200);
+}
+
+function calculateResults() {
+    // Check DRUNK trigger first
+    const q5Idx = QUESTIONS.findIndex(q => q.code === 'DRUNK-GATE');
+    if (q5Idx !== -1 && answers[q5Idx] === 2) {  // Option C = 饮酒
+        window.resultPersonality = PERSONALITIES['DRUNK'];
+        window.matchRate = 100;
+        window.bestMatchKey = 'DRUNK';
+        // Set default dimScores for radar
+        const dimScores = {};
+        for (let d of Object.keys(DIM_MAP)) dimScores[d] = 'M';
+        window.dimScores = dimScores;
+        return;
+    }
+    
+    // Check JOKE-R trigger
+    const q27Idx = QUESTIONS.findIndex(q => q.code === 'JOKE-GATE');
+    if (q27Idx !== -1 && answers[q27Idx] === 0) {  // Option A = 我哭了
+        window.resultPersonality = PERSONALITIES['JOKE-R'];
+        window.matchRate = 100;
+        window.bestMatchKey = 'JOKE-R';
+        const dimScores = {};
+        for (let d of Object.keys(DIM_MAP)) dimScores[d] = 'L';
+        window.dimScores = dimScores;
+        return;
+    }
+
+    // Calculate dimension scores
+    const dimScores = {};
+    for (let dim of Object.keys(DIM_MAP)) {
+        const qCodes = DIM_MAP[dim];
+        let totalScore = 0;
+        let answeredCount = 0;
+        
+        qCodes.forEach(qCode => {
+            const qIdx = QUESTIONS.findIndex(q => q.code === qCode);
+            if (qIdx !== -1 && answers[qIdx] !== undefined) {
+                totalScore += QUESTIONS[qIdx].options[answers[qIdx]].score;
+                answeredCount++;
+            }
+        });
+        
+        if (answeredCount > 0) {
+            const avg = totalScore / answeredCount;
+            if (avg <= 1.5) dimScores[dim] = 'L';
+            else if (avg >= 2.5) dimScores[dim] = 'H';
+            else dimScores[dim] = 'M';
+        } else {
+            dimScores[dim] = 'M'; // default
+        }
+    }
+    
+    window.dimScores = dimScores;
+    
+    // Check for HHHH first
+    let bestMatch = null;
+    let bestMatchCount = 0;
+    let matchDetails = [];
+    
+    for (let [pKey, pData] of Object.entries(PERSONALITIES)) {
+        if (pKey === 'DRUNK') continue;
+        
+        let matches = 0;
+        let totalDims = 0;
+        
+        for (let [dKey, dLevel] of Object.entries(dimScores)) {
+            totalDims++;
+            if (pData.pattern[dKey] === dLevel) {
+                matches++;
+            }
+        }
+        
+        const rate = matches / totalDims;
+        matchDetails.push({ key: pKey, matches, total: totalDims, rate });
+        
+        if (matches > bestMatchCount) {
+            bestMatchCount = matches;
+            bestMatch = pKey;
+        }
+    }
+    
+    // If best match is below threshold, assign HHHH
+    if (bestMatchCount <= 8) {
+        bestMatch = 'HHHH';
+    }
+    
+    window.resultPersonality = PERSONALITIES[bestMatch];
+    window.matchRate = Math.round((bestMatchCount / 15) * 100);
+    window.bestMatchKey = bestMatch;
+}
+
+function showResults() {
+    document.getElementById('testScreen').style.display = 'none';
+    document.getElementById('resultScreen').style.display = 'block';
+    
+    const p = window.resultPersonality;
+    
+    document.getElementById('resultCode').textContent = p.code;
+    document.getElementById('resultName').textContent = p.name;
+    document.getElementById('resultSlogan').textContent = `"${p.slogan}"`;
+    document.getElementById('matchRate').textContent = `匹配度：${window.matchRate}%`;
+    
+    // Render dimensions detail
+    renderDimensionsDetail();
+    
+    // Draw radar chart
+    drawRadarChart();
+    
+    // Render HR advice sections
+    const advice = p.hrDesc;
+    
+    document.getElementById('workStyleAnalysis').innerHTML = `
+        <div class="advice-card">
+            <h4>💼 工作风格画像</h4>
+            <p>${advice.workStyle}</p>
+        </div>
+        <div class="advice-card">
+            <h4>👥 团队角色定位</h4>
+            <p>${advice.teamRole}</p>
+        </div>`;
+    
+    document.getElementById('careerAdvice').innerHTML = `
+        <div class="advice-card">
+            <h4>🚀 推荐职业发展路径</h4>
+            <ul>${advice.careerPath}</ul>
+        </div>`;
+    
+    document.getElementById('managerAdvice').innerHTML = advice.managerAdvice;
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderDimensionsDetail() {
+    const scores = window.dimScores;
+    const models = [
+        { key: '自我模型', dims: ['S1','S2','S3'] },
+        { key: '情感模型', dims: ['E1','E2','E3'] },
+        { key: '态度模型', dims: ['A1','A2','A3'] },
+        { key: '行动驱力模型', dims: ['Ac1','Ac2','Ac3'] },
+        { key: '社交模型', dims: ['So1','So2','So3'] }
+    ];
+    
+    const levelLabels = {'L':'偏低','M':'中等','H':'较高'};
+    const barWidthMap = {'L':'33%','M':'66%','H':'100%'};
+    
+    let html = '';
+    models.forEach(model => {
+        html += `<div class="dim-model-group">
+            <div class="model-name">${model.key}</div>`;
+        model.dims.forEach(d => {
+            const level = scores[d];
+            html += `<div class="dim-row">
+                <div class="dim-info">
+                    <div class="dim-name">${DIM_NAMES[d]}</div>
+                </div>
+                <div class="dim-bar-wrap">
+                    <div class="dim-bar-fill bar-${level}" style="width:${barWidthMap[level]}"></div>
+                </div>
+                <div class="dim-level level-${level}">${levelLabels[level]}</div>
+            </div>`;
+        });
+        html += '</div>';
+    });
+    
+    document.getElementById('dimensionsDetail').innerHTML = html;
+}
+
+// ============================================================
+// RADAR CHART
+// ============================================================
+
+function drawRadarChart() {
+    const canvas = document.getElementById('radarCanvas');
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    
+    // Set actual size in memory
+    const size = Math.min(400, window.innerWidth - 80);
+    canvas.style.width = size + 'px';
+    canvas.style.height = size + 'px';
+    canvas.width = size * dpr;
+    canvas.height = size * dpr;
+    ctx.scale(dpr, dpr);
+    
+    const centerX = size / 2;
+    const centerY = size / 2;
+    const radius = size * 0.36;
+    
+    const dims = Object.keys(DIM_NAMES);
+    const numDims = dims.length;
+    const angleStep = (Math.PI * 2) / numDims;
+    
+    // Value map: L->0.3, M->0.65, H->1
+    const valMap = {'L':0.3,'M':0.65,'H':1};
+    const values = dims.map(d => valMap[window.dimScores[d]] || 0.5);
+    
+    // Draw background rings (5 levels)
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.lineWidth = 1;
+    for (let ring = 1; ring <= 5; ring++) {
+        ctx.beginPath();
+        const r = radius * (ring / 5);
+        for (let i = 0; i <= numDims; i++) {
+            const angle = i * angleStep - Math.PI / 2;
+            const x = centerX + Math.cos(angle) * r;
+            const y = centerY + Math.sin(angle) * r;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.stroke();
+    }
+    
+    // Draw axes and labels
+    const shortNames = {
+        'S1':'自尊','S2':'自知','S3':'核心价值',
+        'E1':'依恋安全','E2':'情感投入','E3':'边界依赖',
+        'A1':'世界观','A2':'规则灵活','A3':'人生意义',
+        'Ac1':'动机导向','Ac2':'决策风格','Ac3':'执行模式',
+        'So1':'社交主动','So2':'人际边界','So3':'表达真实'
+    };
+    
+    ctx.font = '11px -apple-system, sans-serif';
+    ctx.fillStyle = '#64748b';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    for (let i = 0; i < numDims; i++) {
+        const angle = i * angleStep - Math.PI / 2;
+        const x = centerX + Math.cos(angle) * radius;
+        const y = centerY + Math.sin(angle) * radius;
+        
+        // Axis line
+        ctx.beginPath();
+        ctx.strokeStyle = '#f1f5f9';
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        
+        // Label
+        const labelRadius = radius + 22;
+        const lx = centerX + Math.cos(angle) * labelRadius;
+        const ly = centerY + Math.sin(angle) * labelRadius;
+        ctx.fillStyle = '#475569';
+        ctx.fillText(shortNames[dims[i]], lx, ly);
+    }
+    
+    // Draw data polygon with gradient fill
+    ctx.beginPath();
+    for (let i = 0; i < numDims; i++) {
+        const angle = i * angleStep - Math.PI / 2;
+        const r = radius * values[i];
+        const x = centerX + Math.cos(angle) * r;
+        const y = centerY + Math.sin(angle) * r;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    
+    // Fill gradient
+    const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+    gradient.addColorStop(0, 'rgba(59,130,246,0.35)');
+    gradient.addColorStop(1, 'rgba(59,130,246,0.08)');
+    ctx.fillStyle = gradient;
+    ctx.fill();
+    
+    // Stroke
+    ctx.strokeStyle = '#3b82f6';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+    
+    // Data points
+    for (let i = 0; i < numDims; i++) {
+        const angle = i * angleStep - Math.PI / 2;
+        const r = radius * values[i];
+        const x = centerX + Math.cos(angle) * r;
+        const y = centerY + Math.sin(angle) * r;
+        
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#2563eb';
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+}
+
+// Redraw on resize
+window.addEventListener('resize', () => {
+    if (document.getElementById('resultScreen').style.display === 'block') {
+        drawRadarChart();
+    }
+});
+
+// Share function
+function shareResult() {
+    const p = window.resultPersonality;
+    const text = `🧠 我的SBTI职场人格测试结果是：【${p.code} - ${p.name}】\n"${p.slogan}"\n\n匹配度：${window.matchRate}%\n\n👉 来测测你的职场人格类型吧！（HR咨询顾问版）`;
+    
+    if (navigator.share) {
+        navigator.share({ title: 'SBTI职场人格测试结果', text: text });
+    } else {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('结果已复制到剪贴板，可以直接粘贴分享！');
+        }).catch(() => {
+            prompt('复制以下内容分享：', text);
+        });
+    }
+}
+</script>
+
+</body>
+</html>
