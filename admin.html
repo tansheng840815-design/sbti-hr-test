@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBTI 测试数据后台</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3a5f, #1e40af);
+            padding: 28px 32px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        
+        .header h1 { font-size: 22px; font-weight: 800; }
+        .header .badge { background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 20px; font-size: 12px; }
+        
+        .container { max-width: 1200px; margin: 24px auto; padding: 0 20px; }
+        
+        /* Stats Cards */
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        
+        .stat-card { background: #1e293b; border-radius: 12px; padding: 20px; border-left: 4px solid #3b82f6; }
+        .stat-card .num { font-size: 36px; font-weight: 900; color: #60a5fa; line-height: 1.2; }
+        .stat-card .label { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+        
+        /* Table */
+        .card { background: #1e293b; border-radius: 12px; overflow: hidden; margin-bottom: 24px; }
+        .card-header { padding: 18px 20px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; }
+        .card-header h2 { font-size: 16px; font-weight: 700; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px 14px; text-align: left; font-size: 13px; border-bottom: 1px solid #334155; white-space: nowrap; }
+        th { background: #0f172a; color: #94a3b8; font-weight: 600; position: sticky; top: 0; }
+        tr:hover td { background: #334155; }
+        
+        .tag-H { background: #065f46; color: #6ee7b7; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+        .tag-M { background: #92400e; color: #fcd34d; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+        .tag-L { background: #7e22ce; color: #c4b5fd; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+        
+        .personality-tag {
+            display: inline-block; padding: 4px 12px; border-radius: 20px;
+            font-weight: 700; font-size: 12px; letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4); color: #fff;
+        }
+        
+        /* Config */
+        .config-section { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+        .config-section label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 6px; }
+        .config-input { width: 100%; max-width: 600px; padding: 10px 14px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 14px; outline: none; font-family: monospace; }
+        .config-input:focus { border-color: #3b82f6; }
+        
+        .btn {
+            padding: 9px 20px; border: none; border-radius: 8px; cursor: pointer;
+            font-size: 13px; font-weight: 600; transition: all 0.2s; font-family: inherit;
+        }
+        .btn-primary { background: #3b82f6; color: #fff; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-export { background: #059669; color: #fff; margin-left: 8px; }
+        .btn-export:hover { background: #047857; }
+        
+        .loading { text-align: center; padding: 40px; color: #64748b; }
+        
+        @media (max-width: 700px) { .container { padding: 0 12px; } .stats-row { grid-template-columns: 1fr 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>📊 SBTI 测试数据后台</h1>
+    <span class="badge">HR 咨询顾问版</span>
+</div>
+
+<div class="container">
+
+    <!-- API Config -->
+    <div class="config-section" id="configSection">
+        <label>Google Apps Script Web App URL（用于连接 Google Sheet 数据库）</label>
+        <input type="text" class="config-input" id="apiUrl" placeholder="https://script.google.com/macros/s/.../exec" value="">
+        <div style="margin-top:12px;">
+            <button class="btn btn-primary" onclick="loadData()">🔄 加载数据</button>
+            <button class="btn btn-export" onclick="exportCSV()">📥 导出 CSV</button>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row" id="statsRow">
+        <div class="stat-card"><div class="num" id="totalTests">-</div><div class="label">总测试人数</div></div>
+        <div class="stat-card"><div class="num" id="todayTests">-</div><div class="label">今日新增</div></div>
+        <div class="stat-card"><div class="num" id="companyCount">-</div><div class="label">涉及公司数</div></div>
+        <div class="stat-card"><div class="num" id="typeCount">-</div><div class="label">人格类型覆盖</div></div>
+    </div>
+
+    <!-- Personality Distribution -->
+    <div class="card">
+        <div class="card-header"><h2>🧠 人格类型分布</h2></div>
+        <table id="distTable"><tbody><tr><td colspan="4" class="loading">点击「加载数据」查看统计</td></tr></tbody></table>
+    </div>
+
+    <!-- Records Table -->
+    <div class="card">
+        <div class="card-header"><h2>📋 详细记录</h2></div>
+        <div style="overflow-x:auto;">
+            <table id="recordsTable">
+                <thead><tr>
+                    <th>提交时间</th><th>姓名</th><th>邮箱/微信号</th><th>公司</th><th>岗位</th><th>工作年限</th>
+                    <th>人格代码</th><th>人格名称</th><th>匹配度</th>
+                </tr></thead>
+                <tbody><tr><td colspan="9" class="loading">点击「加载数据」查看记录</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+let allRecords = [];
+
+// Load from URL param or localStorage
+function getApiUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const url = document.getElementById('apiUrl').value || urlParams.get('url') || localStorage.getItem('sbti_api_url') || '';
+    if (url) localStorage.setItem('sbti_api_url', url);
+    return url;
+}
+
+async function loadData() {
+    const apiUrl = getApiUrl().replace(/\/$/, '');
+    if (!apiUrl) {
+        alert('请先填写 Google Apps Script 的 Web App URL');
+        return;
+    }
+
+    try {
+        const [recordsRes, statsRes] = await Promise.all([
+            fetch(`${apiUrl}?action=getRecords`).then(r => r.json()),
+            fetch(`${apiUrl}?action=getStats`).then(r => r.json())
+        ]);
+
+        allRecords = recordsRes.records || [];
+        const stats = statsRes;
+
+        // Update stats
+        document.getElementById('totalTests').textContent = stats.totalTests || allRecords.length;
+
+        const today = new Date().toISOString().slice(0, 10);
+        const todayCount = allRecords.filter(r => (r['提交时间'] || '').startsWith(today)).length;
+        document.getElementById('todayTests').textContent = todayCount;
+
+        const companies = new Set(allRecords.map(r => r['公司/组织']).filter(c => c && c !== '未填写'));
+        document.getElementById('companyCount').textContent = companies.size || Object.keys(stats.companyStats || {}).length;
+
+        const types = new Set(allRecords.map(r => r['人格名称']));
+        document.getElementById('typeCount').textContent = types.size || Object.keys(stats.personalityDistribution || {}).length;
+
+        // Render distribution
+        renderDistTable(stats.personalityDistribution || {});
+
+        // Render records
+        renderRecords();
+
+        alert(`✅ 数据加载成功！共 ${allRecords.length} 条记录`);
+    } catch(err) {
+        console.error(err);
+        alert('❌ 加载失败：' + err.message + '\n\n请确认：\n1. URL 是否正确\n2. Google Sheet 后台是否已部署\n3. 网络应用是否设为"任何人可访问"');
+    }
+}
+
+function renderDistTable(dist) {
+    const sorted = Object.entries(dist).sort((a,b) => b[1] - a[1]);
+    const html = sorted.map(([name, count]) =>
+        `<tr><td style="font-weight:700;">${name}</td><td>${count}</td>`
+    ).join('');
+    document.getElementById('distTable').innerHTML =
+        `<thead><tr><th>人格类型</th><th>人数</th></tr></thead>` +
+        (html || '<tr><td colspan="2" class="loading">暂无数据</td></tr>');
+}
+
+function renderRecords() {
+    if (allRecords.length === 0) {
+        document.querySelector('#recordsTable tbody').innerHTML =
+            '<tr><td colspan="9" class="loading">暂无记录</td></tr>';
+        return;
+    }
+    
+    const dimNames = ['自尊自信','自我清晰度','核心价值','依恋安全','情感投入','边界依赖',
+                       '世界观','规则灵活','人生意义','动机导向','决策风格','执行模式',
+                       '社交主动','人际边界','表达真实'];
+    
+    let html = '';
+    allRecords.slice().reverse().forEach((r, i) => {
+        html += `<tr>`;
+        html += `<td>${(r['提交时间']||'').replace('T',' ').substring(0,19)}</td>`;
+        html += `<td>${r['姓名']||'-'}</td>`;
+        html += `<td>${(r['邮箱/微信号']||'-').replace(/(.{3}).*(@.*)/, '$1***$2')}</td>`;
+        html += `<td>${r['公司/组织']||'-'}</td>`;
+        html += `<td>${r['岗位/职能']||'-'}</td>`;
+        html += `<td>${r['工作年限']||'-'}</td>`;
+        html += `<td><span class="personality-tag">${r['人格代码']||'-'}</span></td>`;
+        html += `<td>${r['人格名称']||'-'}</td>`;
+        html += `<td>${r['匹配度(%)']||'-'}%</td>`;
+        html += `</tr>`;
+    });
+    
+    document.querySelector('#recordsTable tbody').innerHTML = html;
+}
+
+function exportCSV() {
+    if (allRecords.length === 0) { alert('没有数据可导出'); return; }
+    
+    const headers = ['提交时间','姓名','性别','公司/组织','岗位/职能','部门/团队','工作年限','人格代码','人格名称','匹配度(%)'];
+    let csv = '\uFEFF' + headers.join(',') + '\n';
+    allRecords.forEach(r => {
+        csv += headers.map(h => `"${(r[h]||'').toString().replace(/"/g,'""')}"`).join(',') + '\n';
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `SBTI测试数据_${new Date().toLocaleDateString('zh-CN')}.csv`;
+    link.click();
+}
+
+// Auto-load if URL has params
+if (new URLSearchParams(window.location.search).get('url')) {
+    setTimeout(loadData, 500);
+}
+</script>
+</body>
+</html>

@@ -123,8 +123,9 @@
         }
 
         /* ====== Start Screen ====== */
-        #startScreen { display: block; }
-        #testScreen, #resultScreen { display: none; }
+// #startScreen { display: block; }
+#regScreen { display: block; }
+#startScreen, #testScreen, #resultScreen { display: none; }
         
         .start-content {
             padding: 44px 36px 40px;
@@ -730,6 +731,75 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         
         .loading-text { margin-top: 18px; font-weight: 600; color: var(--text-secondary); font-size: 15px; }
+
+        /* ====== Form Styles ====== */
+        #regScreen { display: block; }
+        
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: #fff;
+            transition: all 0.22s ease;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37,99,235,0.1);
+        }
+        
+        .form-input::placeholder { color: var(--text-muted); }
+
+        select.form-input {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #1e293b;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+            pointer-events: none;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        @media (max-width: 520px) {
+            #regScreen .start-content { padding: 28px 20px 24px; }
+            #regForm > div[style*="grid"] { grid-template-columns: 1fr !important; }
+        }
     </style>
 </head>
 <body>
@@ -737,8 +807,11 @@
 <!-- Loading Overlay -->
 <div class="loading-overlay" id="loadingOverlay">
     <div class="spinner"></div>
-    <div class="loading-text">正在分析您的人格特质...</div>
+    <div class="loading-text" id="loadingText">正在分析您的人格特质...</div>
 </div>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast"></div>
 
 <!-- Header -->
 <header class="header">
@@ -751,6 +824,80 @@
 </header>
 
 <div class="container">
+
+    <!-- ========== REGISTRATION SCREEN ========== -->
+    <div id="regScreen" class="card">
+        <div class="start-content">
+            <div class="start-icon-wrap">📝</div>
+            <h2 class="start-title">欢迎来到 SBTI 职场人格测试</h2>
+            <p class="start-desc" style="margin-bottom:24px;">请先填写以下基本信息（带 * 为必填），测试完成后数据将用于生成团队分析报告。</p>
+            
+            <form id="regForm" onsubmit="return submitRegForm(event)" style="text-align:left;">
+                <!-- Row 1: Name & Gender -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+                    <div>
+                        <label class="form-label"><span style="color:#ef4444;">*</span> 姓名</label>
+                        <input type="text" class="form-input" id="regName" placeholder="你的姓名或昵称" required maxlength="20">
+                    </div>
+                    <div>
+                        <label class="form-label">性别</label>
+                        <select class="form-input" id="regGender">
+                            <option value="">不透露</option>
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Row 2: Email -->
+                <div style="margin-bottom:16px;">
+                    <label class="form-label"><span style="color:#ef4444;">*</span> 邮箱 / 微信号</label>
+                    <input type="text" class="form-input" id="regEmail" placeholder="用于接收报告（选填）" required maxlength="50">
+                </div>
+                
+                <!-- Row 3: Company & Position -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+                    <div>
+                        <label class="form-label">公司/组织</label>
+                        <input type="text" class="form-input" id="regCompany" placeholder="公司名称" maxlength="40">
+                    </div>
+                    <div>
+                        <label class="form-label">岗位/职能</label>
+                        <input type="text" class="form-input" id="regPosition" placeholder="如：HR经理、产品经理" maxlength="30">
+                    </div>
+                </div>
+                
+                <!-- Row 4: Team -->
+                <div style="margin-bottom:16px;">
+                    <label class="form-label">所属团队/部门</label>
+                    <input type="text" class="form-input" id="regTeam" placeholder="如：培训部、产品研发中心" maxlength="40">
+                </div>
+
+                <!-- Row 5: Years of experience -->
+                <div style="margin-bottom:20px;">
+                    <label class="form-label">工作年限</label>
+                    <select class="form-input" id="regYears">
+                        <option value="">请选择</option>
+                        <option value="0-1年">0-1年</option>
+                        <option value="1-3年">1-3年</option>
+                        <option value="3-5年">3-5年</option>
+                        <option value="5-10年">5-10年</option>
+                        <option value="10年以上">10年以上</option>
+                        <option value="学生">学生</option>
+                    </select>
+                </div>
+                
+                <!-- Privacy note -->
+                <div class="disclaimer" style="margin-bottom:24px;">
+                    <p><strong>🔒 隐私说明：</strong>你填写的所有信息仅用于本次测试记录和后续分析，不会向第三方泄露。邮箱仅用于发送测试结果报告（如有）。</p>
+                </div>
+                
+                <button type="submit" class="btn-start pulse-glow" style="width:100%;justify-content:center;">
+                    ✅ 填好了，开始测试
+                </button>
+            </form>
+        </div>
+    </div>
 
     <!-- ========== START SCREEN ========== -->
     <div id="startScreen" class="card">
@@ -1746,6 +1893,49 @@ const PERSONALITIES = {
 let currentQuestion = 0;
 let answers = {};
 let isDrunk = false;
+let userData = {}; // Store registration data
+
+// ============================================================
+// REGISTRATION
+// ============================================================
+
+function submitRegForm(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const gender = document.getElementById('regGender').value || '不透露';
+    const company = document.getElementById('regCompany').value.trim();
+    const position = document.getElementById('regPosition').value.trim();
+    const team = document.getElementById('regTeam').value.trim();
+    const years = document.getElementById('regYears').value || '未填写';
+    
+    if (!name) {
+        showToast('请填写姓名');
+        return false;
+    }
+    if (!email) {
+        showToast('请填写邮箱或微信号');
+        return false;
+    }
+    
+    userData = { name, email, gender, company, position, team, years };
+    
+    // Save to localStorage for later use
+    try { localStorage.setItem('sbti_user', JSON.stringify(userData)); } catch(e) {}
+    
+    document.getElementById('regScreen').style.display = 'none';
+    document.getElementById('startScreen').style.display = 'block';
+    
+    return false;
+}
+
+function showToast(msg, duration=2500) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), duration);
+}
 
 // ============================================================
 // INITIALIZATION
@@ -1978,6 +2168,9 @@ function showResults() {
     
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Submit data to backend (non-blocking)
+    submitTestData();
 }
 
 function renderDimensionsDetail() {
@@ -2142,6 +2335,55 @@ window.addEventListener('resize', () => {
         drawRadarChart();
     }
 });
+
+// Submit test result to backend
+function submitTestData() {
+    try {
+        const p = window.resultPersonality;
+        const scores = window.dimScores;
+        const timestamp = new Date().toISOString();
+        
+        // Build the record
+        const record = {
+            timestamp: timestamp,
+            user: userData,
+            personality: { code: p.code, name: p.name, matchRate: window.matchRate },
+            dimensions: scores,
+            rawAnswers: answers
+        };
+        
+        // Try multiple backends in order of preference
+        
+        // 1. Google Apps Script (Web App) - most reliable free option
+        submitToGoogleAppsScript(record);
+        
+        // Also save to localStorage as backup
+        try {
+            let history = JSON.parse(localStorage.getItem('sbti_history') || '[]');
+            history.push(record);
+            if (history.length > 100) history.shift(); // Keep last 100
+            localStorage.setItem('sbti_history', JSON.stringify(history));
+        } catch(e) {}
+        
+    } catch(err) {
+        console.log('[SBTI] Data submit error:', err.message);
+    }
+}
+
+// Google Apps Script Web App endpoint
+// To set up: create a Google Sheet → Extensions → Apps Script → deploy as web app
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxEXAMPLE/exec';
+
+function submitToGoogleAppsScript(record) {
+    fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'submitTestResult', data: record })
+    }).catch(err => {
+        console.log('[SBTI] Google Script not available, using fallback');
+    });
+}
 
 // Share function
 function shareResult() {
